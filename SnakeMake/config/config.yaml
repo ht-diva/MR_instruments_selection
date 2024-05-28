@@ -1,1 +1,8 @@
+run:
+  delivery: False
+
+# paths
+workspace_path: 'results'
+sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output'
+
 
