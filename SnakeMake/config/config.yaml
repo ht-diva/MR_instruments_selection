@@ -4,5 +4,7 @@ run:
 # paths
 workspace_path: 'results'
 sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output'
-destination_dir: '/scratch/giulia.pontali/pQTL_bonferroni_significant'
+
+params:
+  bonferroni_threshold: 10.90069 
 
