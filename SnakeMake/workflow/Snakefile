@@ -7,35 +7,44 @@ min_version("8.4.1")
 
 configfile: "config/config.yaml"
 
+# Set the destination directory
+destination_dir = "/scratch/giulia.pontali/pQTL_bonferroni_significant"
 
-include: "rules/common.smk"
-
-
-if config.get("run").get("delivery"):
-
-    include: "rules/delivery.smk"
-
+# Function to get sequence numbers from subdirectories
+def get_seq_numbers(wildcards):
+    import os
+    source_dir = "/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output"
+    seq_numbers = []
+    for subdir in os.listdir(source_dir):
+        if subdir.startswith("seq") and os.path.isdir(os.path.join(source_dir, subdir)):
+            seq_number = subdir.lstrip("seq")
+            seq_numbers.append(seq_number)
+    return seq_numbers
 
 rule all:
     input:
-        get_final_output(),
+        expand(f"{destination_dir}/seq{{seq_number}}.txt", seq_number=get_seq_numbers)
 
-
-rule list_rs:
+rule process_files:
     input:
-        directory_path=expand(get_pvar(), chrom=[i for i in range(1, 23)]),
+        lambda wildcards: expand("/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output/seq{seq_number}/*.gwaslab.tsv.gz", seq_number=wildcards.seq_number)
     output:
-        list_merge_rsid=ws_path("pgen/merge_rsids.txt"),
-        list_recode_rsid=ws_path("pgen/recode_rsids.txt"),
-        list_pseudo_biallelic_var=ws_path("pgen/pseudo_biallelic_var.txt"),
-        list_pseudo_biallelic=ws_path("pgen/pseudo_biallelic.txt"),
-    resources:
-        rountime=lambda wc, attempt: attempt * 60,
+        f"{destination_dir}/seq{{seq_number}}.txt"
     shell:
         """
-tail -n +2 -q {input.directory_path} > {output.list_merge_rsid} && \
-awk -F'\t' '$2 in a{{if(a[$2])print a[$2];a[$2]=""; print; next}} {{a[$2]=$0}}' {output.list_merge_rsid} > {output.list_pseudo_biallelic_var} && \
-awk -v OFS="\t" 'BEGIN {{print "RSID", "ID"}} {{print $3, $1":"$2":"$4":"$5}}' {output.list_pseudo_biallelic_var} > {output.list_pseudo_biallelic} && \
-awk -v OFS="\t" 'BEGIN {{print "SNPID", "rsID", "CHR", "POS", "NEA", "EA"}} {{print $1":"$2":"$4":"$5, $3, $1, $2, $4, $5}}' {output.list_merge_rsid} > {output.list_recode_rsid}
-"""
+        seq_number={wildcards.seq_number}
+        dest_filename={output}
+        threshold=$(awk 'BEGIN{{print 10.90069}}')
 
+        for file in {input}; do
+            if [ -e "$file" ]; then
+                zcat "$file" | awk -v threshold=$threshold 'BEGIN{{OFS="\t"}} $13 > threshold {{print}}' > temp_file.txt
+
+                if [ $(wc -l < temp_file.txt) -gt 1 ]; then
+                    mv temp_file.txt $dest_filename
+                else
+                    rm temp_file.txt
+                fi
+            fi
+        done
+        """
