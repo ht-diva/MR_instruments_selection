@@ -1,12 +1,14 @@
 #install.packages(data.table)
-#install.packages(IRanges)
+# if (!require("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# BiocManager::install("IRanges")
 library(data.table)
 library(IRanges)
 source("/home/solene.cadiou/basic_GWAS_protein/meta_results/MR/MR_instruments_selection/code/mapping_function_for_regions.R")
 
 ###loading and parameters########
 ##Locus_breaker results
-LB<-fread("/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats/22-May-24_regional_associations_with_6236_proteins_mhc_excluded.csv")
+LB<-fread("/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats/24-May-24_regional_associations_with_6236_proteins_mhc_excluded.csv")
 ##number of effective tests
 NEF<-3978
 ##path to sumstats

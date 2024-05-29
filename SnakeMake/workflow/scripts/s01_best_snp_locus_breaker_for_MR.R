@@ -8,14 +8,14 @@ option_list <- list(
   make_option("--input", default=NULL, help="Path and file name of LocusBreaker"),
   make_option("--NEF", default=NULL, help="Number of effective tests to apply Bonferroni correction"),
   make_option("--output", default=NULL, help="Output path and name for list of instruments from Locus Breaker"),
-  make_option("--mapping", default=NULL, help="Mapping file for cis and trans"))
+  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 LB<-fread(opt$input)
 NEF<-opt$NEF
 path_to_sumstats<-opt$path
 output_path<-opt$output
-mapping<-opt$mapping
+mapping<-fread(opt$mapping)
 ####################################
 ###loading and parameters########
 ##Locus_breaker results
@@ -85,19 +85,4 @@ LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","study_id",
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save
-write.table(LB,paste(output_path,"MR_instruments_best_snps_from_LB.txt",sep="")) ##add path
-
-
-
-# 
-# 
-# 
-# 
-# # filter snps significant in the meta-analysis and significant with opposite direction in single studies
-# threshold<-(-log10((5*10^(-8))/as.numeric(opt$NEF)))
-# unconsistent<-c("-+","+-")
-# heterogenous<-dataset[dataset$MLOG10P>=threshold&dataset$DIRECTION%in%unconsistent,]
-# heterogenous$SEQID<-rep(opt$seqi,nrow(heterogenous))
-# fwrite(heterogenous, opt$output,
-#        sep="\t", quote=F, col.names = T, na=NA)
-# cat("\nHeterogenous snps saved!\n")
+write.table(LB,output_path) 
