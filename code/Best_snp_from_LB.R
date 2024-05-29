@@ -2,7 +2,7 @@
 #install.packages(IRanges)
 library(data.table)
 library(IRanges)
-source("mapping_function_for_regions.R")
+source("/home/solene.cadiou/basic_GWAS_protein/meta_results/MR/MR_instruments_selection/code/mapping_function_for_regions.R")
 
 ###loading and parameters########
 ##Locus_breaker results
@@ -13,7 +13,7 @@ NEF<-3978
 path_to_sumstats<-"/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output/"
 
 ##mapping file
-mapping<-fread("/home/solene.cadiou/basic_GWAS_protein/meta_results/MR/MR_instruments_selection/mapped_gene_file_GRCh37_21052025.txt")
+mapping<-fread("/home/solene.cadiou/basic_GWAS_protein/meta_results/MR/MR_instruments_selection/code/mapped_gene_file_GRCh37_21052025.txt")
 mapping$target<-paste("seq.",gsub("-", ".",mapping$SeqId),sep="")
 mapping$cis_end<-(mapping$TSS+500000)
 mapping$cis_start<-(mapping$TSS-500000)
@@ -24,7 +24,7 @@ mapping$cis_start<-(mapping$TSS-500000)
 for (i in 1:nrow(LB)){
     LB$cis_or_trans[i]<-map(LB$study_id[i],LB$chr[i],LB$start[i],LB$end[i],mapping)
   } ##debug the apply command instead of using loop
-#table(LB$cis_or_trans)
+table(LB$cis_or_trans)
 
 ##filtering only cis
 LB<-LB[LB$cis_or_trans=="cis",]
