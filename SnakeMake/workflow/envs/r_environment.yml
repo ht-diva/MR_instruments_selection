@@ -1,4 +1,4 @@
-name: r_filter_heterogeneity
+name: r_MR
 channels:
   - conda-forge
   - bioconda

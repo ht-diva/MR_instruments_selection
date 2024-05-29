@@ -9,5 +9,5 @@ mapping_file: 'data/mapped_gene_file_GRCh37_21052025.txt'
 
 params:
   bonferroni_threshold: 10.90069 
-  nef:3978
+  nef: 3978
   
