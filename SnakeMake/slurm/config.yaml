@@ -7,7 +7,7 @@ retries: 3
 max-jobs-per-second: 10
 max-status-checks-per-second: 1
 local-cores: 1
-cores: &cores 8
+cores: &cores 2
 latency-wait: 60
 keep-going: True
 rerun-incomplete: False
@@ -22,8 +22,8 @@ default-resources:
     runtime: attempt * 5
 set-resources:
     select_best_SNP_from_LocusBreaker:
-        mem_mb: 102400 + attempt * 2048
+        mem_mb: 2048 + attempt * 2048
         threads: *cores
     select_SNP_from_cojo:
-        mem_mb: 102400 + attempt * 2048
+        mem_mb: 2048 + attempt * 2048
         threads: *cores
