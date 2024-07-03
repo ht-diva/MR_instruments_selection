@@ -43,7 +43,7 @@ LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10
 ##TO CHECK WITH MVP: if 2 rows with identical seqID, what should we do? keep both? choose the one with strongest pval?
 ############################################
 
-##we need to define instruments from the sunmstats for the regions in which the top snp does not pass Fstats filter 
+##we need to define instruments from the sunmstats for the regions in which the top snp does not pass Fstats filter
 if (FALSE%in%LB$instrum){
 index_not_passing<-which(!LB$instrum)
 LB_not_passing<-LB[!LB$instrum,]

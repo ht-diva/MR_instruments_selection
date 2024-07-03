@@ -7,15 +7,18 @@ min_version("8.4.1")
 
 configfile: "config/config.yaml"
 
+
 include: "rules/common.smk"
+
 
 rule all:
     input:
         dst_path("MR_instruments_best_snps_from_LB.txt"),
 
-rule select_ best_SNP_from_LocusBreaker:
+
+rule select_best_SNP_from_LocusBreaker:
     input:
-        '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats/22-May-24_regional_associations_with_6236_proteins_mhc_excluded.csv',
+        "/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats/22-May-24_regional_associations_with_6236_proteins_mhc_excluded.csv",
     output:
         dst_path("MR_instruments_best_snps_from_LB.txt"),
     resources:

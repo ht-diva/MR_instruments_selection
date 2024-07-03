@@ -15,11 +15,11 @@ list_k4<-gsub("-",".",k4$V1)
 list_k4<-paste("seq.",list_k4,sep="")
 
 ####PART 1: annotation of a dataset containing a "target" variable####
-##the function defines in this part directly take as input a dataset containing 
-##a "target" column containing the seqid ("seq.XXXX.X"), and the 4 list of aptamers 
+##the function defines in this part directly take as input a dataset containing
+##a "target" column containing the seqid ("seq.XXXX.X"), and the 4 list of aptamers
 ##corresponding to each of the assay versions.
 ##It returns the input dataset with 2 additional variables:
-## "new_target" which gives the information about the versions of the assay 
+## "new_target" which gives the information about the versions of the assay
 ##containing the aptamer
 ## "new" which gives the information about the aptamer being new in 7k or not
 
@@ -40,13 +40,13 @@ return(lit)
 
 ##load file to annotate
 lit<-fread("")
-##apply function 
+##apply function
 lit<-assay_annotation_on_dataset(lit,list_k7,list_k5,list_k4,list_k1)
 
 ####PART 2: annotation function with aptamer as an input
 ##the function defines in this part directly take as input an aptamer (format:
 ##"seq.XXXX.X" and the 4 list of aptamers corresponding to each of the assay versions.
-##it returns a list of characters with each of the assay version containing 
+##it returns a list of characters with each of the assay version containing
 ##this aptamer.
 
 annotation_aptamer<-function(target, list_k7,list_k5,list_k4,list_k1){
@@ -57,5 +57,3 @@ annotation_aptamer<-function(target, list_k7,list_k5,list_k4,list_k1){
   if (target%in%list_k1){a<-c(a,list("in_1k_assay"))}
   return(a)
 }
-
-

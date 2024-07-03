@@ -19,4 +19,3 @@ map <- function(seqId = character(), chr, start, end, mapping_file) {
     }
   }
 }
-

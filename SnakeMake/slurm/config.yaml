@@ -25,6 +25,6 @@ set-resources:
     snps_bonferroni_significant:
         mem_mb: 102400 + attempt * 2048
         threads: *cores
-    select_ best_SNP_from_LocusBreaker:
+    select_best_SNP_from_LocusBreaker:
         mem_mb: 102400 + attempt * 2048
         threads: *cores

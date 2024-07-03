@@ -8,6 +8,5 @@ sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstat
 mapping_file: 'data/mapped_gene_file_GRCh37_21052025.txt'
 
 params:
-  bonferroni_threshold: 10.90069 
+  bonferroni_threshold: 10.90069
   nef: 3978
-  
