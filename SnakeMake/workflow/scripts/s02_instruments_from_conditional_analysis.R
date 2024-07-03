@@ -27,11 +27,13 @@ mapping$cis_start<-(mapping$TSS-500000)
 ###cis mapping of Cojo file
 # LB$cis_or_trans<-apply(LB[,c("study_id","chr","start","end")],1,function(X) map(seqId=X["study_id"],chr=X["chr"],start=as.numeric(X["start"]),end=as.numeric(X["end"]),mapping_file=mapping))
 for (i in 1:nrow(cojo)){
-  cojo$cis_or_trans[i]<-map(cojo$study_id[i],cojo$chr[i],cojo$pos[i],cojo$pos[i],mapping)
+  cojo$cis_or_trans[i]<-map(cojo$study_id[i],cojo$Chr[i],cojo$bp[i],cojo$bp[i],mapping)
 }
 ##filtering only cis
 cojo<-cojo[cojo$cis_or_trans=="cis",]
 
 ##Fstats computation
-cojo$Fstats<-((cojo$BETA^2)/(cojo$SE^2))
-cojo$Fstats_j<-((cojo_j$BETA^2)/(cojo_j$SE^2))
+cojo$Fstats<-((cojo$b^2)/(cojo$se^2))
+cojo$Fstats_j<-((cojo$bJ^2)/(cojo$bJ_se^2))
+
+write.table(cojo,output_path)
