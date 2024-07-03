@@ -13,9 +13,6 @@ cojo<-fread(opt$input)
 output_path<-opt$output
 mapping<-fread(opt$mapping)
 ####################################
-###loading and parameters########
-# ##path to sumstats
-# path_to_sumstats<-"/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output/"
 
 ##mapping file
 # mapping<-fread("/home/solene.cadiou/basic_GWAS_protein/meta_results/MR/MR_instruments_selection/mapped_gene_file_GRCh37_21052025.txt")
@@ -25,7 +22,6 @@ mapping$cis_start<-(mapping$TSS-500000)
 ##################
 
 ###cis mapping of Cojo file
-# LB$cis_or_trans<-apply(LB[,c("study_id","chr","start","end")],1,function(X) map(seqId=X["study_id"],chr=X["chr"],start=as.numeric(X["start"]),end=as.numeric(X["end"]),mapping_file=mapping))
 for (i in 1:nrow(cojo)){
   cojo$cis_or_trans[i]<-map(cojo$study_id[i],cojo$Chr[i],cojo$bp[i],cojo$bp[i],mapping)
 }
