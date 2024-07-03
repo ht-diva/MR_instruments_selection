@@ -5,8 +5,9 @@ run:
 workspace_path: 'results'
 dest_path: 'results'
 sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output'
+cojo_results: ''
 mapping_file: 'data/mapped_gene_file_GRCh37_21052025.txt'
 
+
 params:
-  bonferroni_threshold: 10.90069
   nef: 3978

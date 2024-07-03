@@ -14,6 +14,7 @@ include: "rules/common.smk"
 rule all:
     input:
         dst_path("MR_instruments_best_snps_from_LB.txt"),
+        dst_path("MR_instruments_conditional_analysis.txt"),
 
 
 rule select_best_SNP_from_LocusBreaker:
@@ -36,5 +37,24 @@ rule select_best_SNP_from_LocusBreaker:
             --path {params.path} \
             --mapping {params.mapping} \
             --NEF {params.NEF} \
-            --output {output}
+            --output {output} 
+    """
+
+rule select_SNP_from_cojo:
+    input:
+        config.get("cojo_results")
+    output:
+        ws_path("MR_instruments_conditional_analysis.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt *20
+    params:
+        mapping=config.get("mapping_file"),
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+        Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
+            --input {input} \
+            --mapping {params.mapping} \
+            --output {output} 
         """

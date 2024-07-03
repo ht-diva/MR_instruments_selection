@@ -21,10 +21,9 @@ default-resources:
     threads: 1
     runtime: attempt * 5
 set-resources:
-    # for each rule set the resources that you need
-    snps_bonferroni_significant:
+    select_best_SNP_from_LocusBreaker:
         mem_mb: 102400 + attempt * 2048
         threads: *cores
-    select_best_SNP_from_LocusBreaker:
+    select_SNP_from_cojo:
         mem_mb: 102400 + attempt * 2048
         threads: *cores
