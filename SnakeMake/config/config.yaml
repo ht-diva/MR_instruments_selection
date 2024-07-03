@@ -3,10 +3,11 @@ run:
 
 # paths
 workspace_path: 'results'
-dest_path: 'results'
-sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits/output'
+dest_path: 'destination'
+sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/output'
 cojo_results: ''
-mapping_file: 'data/mapped_gene_file_GRCh37_21052025.txt'
+mapping_filepath: 'data/mapped_gene_file_GRCh37_21052025.txt'
+locus_breaker_filepath: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/25-Jun-24_collected_loci_excluding_mhc_updated_with_mapping.csv'
 
 
 params:

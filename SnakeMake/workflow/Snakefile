@@ -1,5 +1,4 @@
 from snakemake.utils import min_version
-from pathlib import Path
 
 ##### set minimum snakemake version #####
 min_version("8.4.1")
@@ -13,40 +12,41 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        dst_path("MR_instruments_best_snps_from_LB.txt"),
-        dst_path("MR_instruments_conditional_analysis.txt"),
+        ws_path("MR_instruments_best_snps_from_LB.txt"),
+        ws_path("MR_instruments_conditional_analysis.txt"),
 
 
 rule select_best_SNP_from_LocusBreaker:
     input:
-        "/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats/22-May-24_regional_associations_with_6236_proteins_mhc_excluded.csv",
+        lb=config.get("locus_breaker_filepath"),
+        mapping=config.get("mapping_filepath"),
     output:
-        dst_path("MR_instruments_best_snps_from_LB.txt"),
+        ws_path("MR_instruments_best_snps_from_LB.txt"),
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
     params:
         NEF=config.get("params").get("nef"),
         path=config.get("sum_stat_path"),
-        mapping=config.get("mapping_file"),
     conda:
         "envs/r_environment.yml"
     shell:
         """
          Rscript workflow/scripts/s01_best_snp_locus_breaker_for_MR.R \
-            --input {input} \
+            --input {input.lb} \
             --path {params.path} \
-            --mapping {params.mapping} \
+            --mapping {input.mapping} \
             --NEF {params.NEF} \
-            --output {output} 
+            --output {output}
     """
+
 
 rule select_SNP_from_cojo:
     input:
-        config.get("cojo_results")
+        config.get("cojo_results"),
     output:
         ws_path("MR_instruments_conditional_analysis.txt"),
     resources:
-        runtimes=lambda wc, attempt: attempt *20
+        runtimes=lambda wc, attempt: attempt * 20,
     params:
         mapping=config.get("mapping_file"),
     conda:
@@ -56,5 +56,5 @@ rule select_SNP_from_cojo:
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
             --input {input} \
             --mapping {params.mapping} \
-            --output {output} 
+            --output {output}
         """

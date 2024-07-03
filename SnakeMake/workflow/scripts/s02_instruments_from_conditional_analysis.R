@@ -35,4 +35,3 @@ cojo<-cojo[cojo$cis_or_trans=="cis",]
 ##Fstats computation
 cojo$Fstats<-((cojo$BETA^2)/(cojo$SE^2))
 cojo$Fstats_j<-((cojo_j$BETA^2)/(cojo_j$SE^2))
-

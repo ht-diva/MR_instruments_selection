@@ -1,7 +1,7 @@
 suppressMessages(library(data.table))
 suppressMessages(library(optparse))
 suppressMessages(library(IRanges))
-source("mapping_function_for_regions.R")
+source("s00_mapping_functions.R")
 
 option_list <- list(
   make_option("--path", default=NULL, help="Sumstats path"),
