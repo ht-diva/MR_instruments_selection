@@ -7,15 +7,21 @@ option_list <- list(
   make_option("--path", default=NULL, help="Sumstats path"),
   make_option("--input", default=NULL, help="Path and file name of LocusBreaker"),
   make_option("--NEF", default=NULL, help="Number of effective tests to apply Bonferroni correction"),
-  make_option("--output", default=NULL, help="Output path and name for list of instruments from Locus Breaker"),
-  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"))
+  make_option("--MR_output", default=NULL, help="Output path and name for list of instruments from Locus Breaker"),
+  make_option("--map_output", default=NULL, help="Output path and name for cis trans mapping from Locus Breaker"),
+  make_option("--annot_output", default=NULL, help="Output path and name for cis trans mapping and annotation from Locus Breaker"),
+  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
+  make_option("--array_path ", default=NULL, help="Path to the folder containing the list of targets per array"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 LB<-fread(opt$input)
 NEF<-opt$NEF
 path_to_sumstats<-opt$path
-output_path<-opt$output
+map_path<-opt$map_output
+annot_path<-opt$annot_output
+output_path<-opt$MR_output
 mapping<-fread(opt$mapping)
+array_path<-opt$array_path
 ####################################
 ###loading and parameters########
 ##Locus_breaker results
@@ -38,6 +44,19 @@ for (i in 1:nrow(LB)){
   LB$cis_or_trans[i]<-map(LB$study_id[i],LB$chr[i],LB$start[i],LB$end[i],mapping)
 } ##debug the apply command instead of using loop
 #table(LB$cis_or_trans)
+##save mapped file
+fwrite(LB,map_path)
+
+##array version annotation
+##load list of targets per array
+list_k1<-fread(paste0(array_path,"list_k1",sep=""))
+list_k4<-fread(paste0(array_path,"list_k4",sep=""))
+list_k5<-fread(paste0(array_path,"list_k5",sep=""))
+list_k7<-fread(paste0(array_path,"list_k7",sep=""))
+##annotate
+annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1)
+##save annotated file
+fwrite(annot,annot_path)
 
 ##filtering only cis
 LB<-LB[LB$cis_or_trans=="cis",]
