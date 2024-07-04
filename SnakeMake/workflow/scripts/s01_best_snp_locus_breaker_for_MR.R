@@ -85,4 +85,4 @@ LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","study_id",
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save
-write.table(LB,output_path)
+fwrite(LB,output_path)
