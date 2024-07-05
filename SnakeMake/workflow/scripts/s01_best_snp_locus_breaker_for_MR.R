@@ -11,7 +11,7 @@ option_list <- list(
   make_option("--map_output", default=NULL, help="Output path and name for cis trans mapping from Locus Breaker"),
   make_option("--annot_output", default=NULL, help="Output path and name for cis trans mapping and annotation from Locus Breaker"),
   make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
-  make_option("--array_path ", default=NULL, help="Path to the folder containing the list of targets per array"))
+  make_option("--array_path", default=NULL, help="Path to the folder containing the list of targets per array"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 LB<-fread(opt$input)
@@ -49,10 +49,10 @@ fwrite(LB,map_path)
 
 ##array version annotation
 ##load list of targets per array
-list_k1<-colnames(fread(paste0(array_path,"list_k1.txt",sep="")))
-list_k4<-colnames(fread(paste0(array_path,"list_k4.txt",sep="")))
-list_k5<-colnames(fread(paste0(array_path,"list_k5.txt",sep="")))
-list_k7<-colnames(fread(paste0(array_path,"list_k7.txt",sep="")))
+list_k1<-colnames(fread(paste(array_path,"list_k1.txt",sep="/")))
+list_k4<-colnames(fread(paste(array_path,"list_k4.txt",sep="/")))
+list_k5<-colnames(fread(paste(array_path,"list_k5.txt",sep="/")))
+list_k7<-colnames(fread(paste(array_path,"list_k7.txt",sep="/")))
 ##annotate
 annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1)
 ##save annotated file
