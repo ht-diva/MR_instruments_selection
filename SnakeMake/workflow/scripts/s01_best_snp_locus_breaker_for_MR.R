@@ -49,10 +49,10 @@ fwrite(LB,map_path)
 
 ##array version annotation
 ##load list of targets per array
-list_k1<-fread(paste0(array_path,"list_k1",sep=""))
-list_k4<-fread(paste0(array_path,"list_k4",sep=""))
-list_k5<-fread(paste0(array_path,"list_k5",sep=""))
-list_k7<-fread(paste0(array_path,"list_k7",sep=""))
+list_k1<-colnames(fread(paste0(array_path,"list_k1.txt",sep="")))
+list_k4<-colnames(fread(paste0(array_path,"list_k4.txt",sep="")))
+list_k5<-colnames(fread(paste0(array_path,"list_k5.txt",sep="")))
+list_k7<-colnames(fread(paste0(array_path,"list_k7.txt",sep="")))
 ##annotate
 annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1)
 ##save annotated file
