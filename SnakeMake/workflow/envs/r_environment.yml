@@ -9,3 +9,4 @@ dependencies: #R>=4.3
   - r-optparse=1.7.4
   - r-tidyverse=2.0.0
   - r-R.utils=2.12.3
+  - bioconductor-iranges=2.36.0
