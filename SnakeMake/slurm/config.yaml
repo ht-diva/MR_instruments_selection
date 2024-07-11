@@ -29,4 +29,4 @@ set-resources:
         threads: *cores
     heterogenous_filter:
         mem_mb: 2048 + attempt * 2048
-        threads: *cores
+        threads: 1
