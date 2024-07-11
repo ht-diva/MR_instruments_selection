@@ -54,7 +54,7 @@ list_k4<-colnames(fread(paste(array_path,"list_k4.txt",sep="/")))
 list_k5<-colnames(fread(paste(array_path,"list_k5.txt",sep="/")))
 list_k7<-colnames(fread(paste(array_path,"list_k7.txt",sep="/")))
 ##annotate
-annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1)
+annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1,"phenotype_id")
 ##save annotated file
 fwrite(annot,annot_path)
 
