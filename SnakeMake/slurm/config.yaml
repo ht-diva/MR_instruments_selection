@@ -27,3 +27,6 @@ set-resources:
     select_SNP_from_cojo:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
+    heterogenous_filter:
+        mem_mb: 2048 + attempt * 2048
+        threads: *cores

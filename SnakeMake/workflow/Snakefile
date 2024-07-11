@@ -16,7 +16,7 @@ rule all:
         ws_path("MR_instruments_conditional_analysis.txt"),
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
-
+        ws_path("heterogenous_LB.txt"),
 
 rule select_best_SNP_from_LocusBreaker:
     input:
@@ -47,6 +47,26 @@ rule select_best_SNP_from_LocusBreaker:
             --annot_output {output.annotated}
    """
 
+rule heterogenous_filter:
+    input:
+        ws_path("annotated_LB.txt"),
+    output:
+        ws_path("heterogenous_LB.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    params:
+        NEF=config.get("params").get("nef"),
+        Isquare=config.get("params").get("Isquare")
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+         Rscript workflow/scripts/s03_heterogenous_filter.R \
+            --input {input} \
+            --NEF {params.NEF} \
+            --het_output {output} \
+            --Isquare_thresh {params.Isquare}
+   """
 
 rule select_SNP_from_cojo:
     input:

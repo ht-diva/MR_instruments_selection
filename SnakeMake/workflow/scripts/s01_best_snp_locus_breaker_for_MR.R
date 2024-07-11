@@ -53,78 +53,7 @@ list_k1<-colnames(fread(paste(array_path,"list_k1.txt",sep="/")))
 list_k4<-colnames(fread(paste(array_path,"list_k4.txt",sep="/")))
 list_k5<-colnames(fread(paste(array_path,"list_k5.txt",sep="/")))
 list_k7<-colnames(fread(paste(array_path,"list_k7.txt",sep="/")))
-##############################################
 
-# print(list_k1[1])
-# print(list_k4[1])
-# print(list_k5[1])
-# print(list_k7[1])
-# 
-# seqid_colname<-"phenotype_id"
-# lit<-LB
-# print("initialization")
-# lit$new_target <- rep("new", nrow(lit))
-# print("1")
-# print(lit[[seqid_colname]])
-# print(lit[[seqid_colname]] %in% list_k5)
-# print("suite")
-# lit[[seqid_colname]] %in% list_k1
-# lit$new_target <-
-#   ifelse(
-#     lit[[seqid_colname]] %in% list_k5 &
-#       lit[[seqid_colname]] %in% list_k1,
-#     "already_in_5k_and_1k",
-#     lit$new_target
-#   )
-# print("2")
-# lit$new_target <-
-#   ifelse(
-#     lit[[seqid_colname]] %in% list_k5 &
-#       !lit[[seqid_colname]] %in% list_k1,
-#     "already_in_5k",
-#     lit$new_target
-#   )
-# print("3")
-# lit$new_target <-
-#   ifelse(
-#     lit[[seqid_colname]] %in% list_k1 &
-#       !lit[[seqid_colname]] %in% list_k5,
-#     "already_in_1k",
-#     lit$new_target
-#   )
-# print("4")
-# lit$new_target <-
-#   ifelse(
-#     lit$new_target == "already_in_5k" &
-#       lit[[seqid_colname]] %in% list_k4,
-#     "already_in_5k_and_4k",
-#     lit$new_target
-#   )
-# print("5")
-# lit$new_target <-
-#   ifelse(
-#     lit$new_target == "already_in_1k" &
-#       lit[[seqid_colname]] %in% list_k4,
-#     "already_in_4k_and_1k",
-#     lit$new_target
-#   )
-# print("6")
-# lit$new_target <-
-#   ifelse(
-#     lit$new_target == "already_in_5k_and_1k" &
-#       lit[[seqid_colname]] %in% list_k4,
-#     "already_in_5k_4k_and_1k",
-#     lit$new_target
-#   )
-# print("7")
-# lit$new_target <-
-#   ifelse(lit$new_target == "new" &
-#            lit[[seqid_colname]] %in% list_k4,
-#          "already_in_4k",
-#          lit$new_target)
-# print("8")
-# lit$new <- ifelse(lit$new_target == "new", TRUE, FALSE)
-# annot<-lit
  ############################################
 ##annotate
 annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1,"phenotype_id")
