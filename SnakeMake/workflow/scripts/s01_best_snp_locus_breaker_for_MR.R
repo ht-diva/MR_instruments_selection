@@ -41,7 +41,7 @@ mapping$cis_start<-(mapping$TSS-500000)
 ###cis mapping of LB file
 # LB$cis_or_trans<-apply(LB[,c("study_id","chr","start","end")],1,function(X) map(seqId=X["study_id"],chr=X["chr"],start=as.numeric(X["start"]),end=as.numeric(X["end"]),mapping_file=mapping))
 for (i in 1:nrow(LB)){
-  LB$cis_or_trans[i]<-map(LB$study_id[i],LB$chr[i],LB$start[i],LB$end[i],mapping)
+  LB$cis_or_trans[i]<-map(LB[["phenotype_id"]][i],LB$chr[i],LB$start[i],LB$end[i],mapping)
 } ##debug the apply command instead of using loop
 #table(LB$cis_or_trans)
 ##save mapped file
@@ -53,6 +53,79 @@ list_k1<-colnames(fread(paste(array_path,"list_k1.txt",sep="/")))
 list_k4<-colnames(fread(paste(array_path,"list_k4.txt",sep="/")))
 list_k5<-colnames(fread(paste(array_path,"list_k5.txt",sep="/")))
 list_k7<-colnames(fread(paste(array_path,"list_k7.txt",sep="/")))
+##############################################
+
+# print(list_k1[1])
+# print(list_k4[1])
+# print(list_k5[1])
+# print(list_k7[1])
+# 
+# seqid_colname<-"phenotype_id"
+# lit<-LB
+# print("initialization")
+# lit$new_target <- rep("new", nrow(lit))
+# print("1")
+# print(lit[[seqid_colname]])
+# print(lit[[seqid_colname]] %in% list_k5)
+# print("suite")
+# lit[[seqid_colname]] %in% list_k1
+# lit$new_target <-
+#   ifelse(
+#     lit[[seqid_colname]] %in% list_k5 &
+#       lit[[seqid_colname]] %in% list_k1,
+#     "already_in_5k_and_1k",
+#     lit$new_target
+#   )
+# print("2")
+# lit$new_target <-
+#   ifelse(
+#     lit[[seqid_colname]] %in% list_k5 &
+#       !lit[[seqid_colname]] %in% list_k1,
+#     "already_in_5k",
+#     lit$new_target
+#   )
+# print("3")
+# lit$new_target <-
+#   ifelse(
+#     lit[[seqid_colname]] %in% list_k1 &
+#       !lit[[seqid_colname]] %in% list_k5,
+#     "already_in_1k",
+#     lit$new_target
+#   )
+# print("4")
+# lit$new_target <-
+#   ifelse(
+#     lit$new_target == "already_in_5k" &
+#       lit[[seqid_colname]] %in% list_k4,
+#     "already_in_5k_and_4k",
+#     lit$new_target
+#   )
+# print("5")
+# lit$new_target <-
+#   ifelse(
+#     lit$new_target == "already_in_1k" &
+#       lit[[seqid_colname]] %in% list_k4,
+#     "already_in_4k_and_1k",
+#     lit$new_target
+#   )
+# print("6")
+# lit$new_target <-
+#   ifelse(
+#     lit$new_target == "already_in_5k_and_1k" &
+#       lit[[seqid_colname]] %in% list_k4,
+#     "already_in_5k_4k_and_1k",
+#     lit$new_target
+#   )
+# print("7")
+# lit$new_target <-
+#   ifelse(lit$new_target == "new" &
+#            lit[[seqid_colname]] %in% list_k4,
+#          "already_in_4k",
+#          lit$new_target)
+# print("8")
+# lit$new <- ifelse(lit$new_target == "new", TRUE, FALSE)
+# annot<-lit
+ ############################################
 ##annotate
 annot<-assay_annotation_on_dataset(LB,list_k7,list_k5,list_k4,list_k1,"phenotype_id")
 ##save annotated file
@@ -68,7 +141,7 @@ LB$instrum<-LB$Fstats>=10 ##to check with Giulia >10 or >=10
 # table(LB$instrum)
 
 ##selecting only columns of interests
-LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","Fstats","instrum","study_id","cis_or_trans")]
+LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","Fstats","instrum","phenotype_id","cis_or_trans")]
 ##here all the rows with instrum =T are instruments
 ##TO CHECK WITH MVP: if 2 rows with identical seqID, what should we do? keep both? choose the one with strongest pval?
 ############################################
@@ -79,7 +152,7 @@ if (FALSE%in%LB$instrum){
   LB_not_passing<-LB[!LB$instrum,]
   for (i in 1:nrow(LB_not_passing)){
     ##build path (to modify with the right path)
-    path<-paste(path_to_sumstats,LB_not_passing$study_id[i],"/",LB_not_passing$study_id[i],".gwaslab.tsv.gz",sep="")
+    path<-paste(path_to_sumstats,LB_not_passing[["phenotype_id"]][i],"/",LB_not_passing[["phenotype_id"]][i],".gwaslab.tsv.gz",sep="")
     sumstats<-fread(path,select = c("CHR","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P"))
     cis<-sumstats[sumstats$CHR==LB_not_passing$chr[i],]
     cis<-cis[cis$POS>=LB_not_passing$start[i]&cis$POS<=LB_not_passing$end[i],]
@@ -93,14 +166,14 @@ if (FALSE%in%LB$instrum){
       # table(colnames(cis)[-1]==colnames(LB_not_passing)[4:13])
       ##check
       # LB_not_passing$study_id[i]==LB$study_id[index_not_passing[i]]
-      LB[index_not_passing[i],]<-c(NA,NA,cis[1,], LB_not_passing$study_id[i],"cis")
+      LB[index_not_passing[i],]<-c(NA,NA,cis[1,], LB_not_passing[["phenotype_id"]][i],"cis")
     }
   }
 }
 
 
 ##selecting only columns of interests
-LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","study_id","cis_or_trans","Fstats","instrum")]
+LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save
