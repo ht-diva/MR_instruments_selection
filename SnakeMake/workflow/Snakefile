@@ -13,6 +13,7 @@ include: "rules/common.smk"
 rule all:
     input:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
+        ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
         ws_path("MR_instruments_conditional_analysis.txt"),
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
@@ -46,6 +47,14 @@ rule select_best_SNP_from_LocusBreaker:
             --MR_output {output.MR} \
             --annot_output {output.annotated}
    """
+
+rule gwas_liftover:
+    input:
+        ws_path("MR_instruments_best_snps_from_LB.txt"),
+    output:
+        ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+    script:
+        "scripts/gwas_liftover.py"
 
 rule heterogenous_filter:
     input:
