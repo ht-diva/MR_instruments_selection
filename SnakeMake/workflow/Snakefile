@@ -79,19 +79,18 @@ rule heterogenous_filter:
 
 rule select_SNP_from_cojo:
     input:
-        config.get("cojo_results"),
+        cojo=config.get("cojo_results"),
+        mapping=config.get("mapping_filepath"),
     output:
         ws_path("MR_instruments_conditional_analysis.txt"),
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
-    params:
-        mapping=config.get("mapping_filepath"),
     conda:
         "envs/r_environment.yml"
     shell:
         """
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
-            --input {input} \
-            --mapping {params.mapping} \
+            --input {input.cojo} \
+            --mapping {input.mapping} \
             --output {output}
         """
