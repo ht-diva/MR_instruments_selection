@@ -92,6 +92,6 @@ rule select_SNP_from_cojo:
         """
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
             --input {input} \
-            --mapping {input.mapping} \
+            --mapping {params.mapping} \
             --output {output}
         """
