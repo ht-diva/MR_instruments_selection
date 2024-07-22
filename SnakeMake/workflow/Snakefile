@@ -54,7 +54,7 @@ rule gwas_liftover:
     output:
         ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
     script:
-        "scripts/gwas_liftover.py"
+        "scripts/s04_liftover.py"
 
 rule heterogenous_filter:
     input:
