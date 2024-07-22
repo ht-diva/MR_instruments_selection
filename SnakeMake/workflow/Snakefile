@@ -85,7 +85,7 @@ rule select_SNP_from_cojo:
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
     params:
-        mapping=config.get("mapping_file"),
+        mapping=config.get("mapping_filepath"),
     conda:
         "envs/r_environment.yml"
     shell:
