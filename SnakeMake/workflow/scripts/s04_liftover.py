@@ -2,15 +2,15 @@ import gwaslab as gl
 
 # Load the summary statistics - verbose if True print logs
 mysumstats = gl.Sumstats("results/MR_instruments_best_snps_from_LB.txt",
-                         snpid="SNP",
+                         snpid="SNPID",
                          chrom="CHR",
                          pos="POS",
-                         ea="ALT",
-                         nea="REF",
-                         neaf="Frq",
+                         ea="EAF",
+                         nea="NEA",
+                         neaf="EAF",
                          beta="BETA",
                          se="SE",
-                         p="P",
+                         p="MLOG10P",
                          verbose=True)
 
 # See how to add how many SNPs we have and how many snps we loose after harmonization.
