@@ -13,6 +13,7 @@ mysumstats = gl.Sumstats("MR_instruments_best_snps_from_LB.txt",
                          p="P",
                          verbose=True)
 
+# See how to add how many SNPs we have and how many snps we loose after harmonization.
 # Perform basic checks
 mysumstats.basic_check(verbose=False)
 

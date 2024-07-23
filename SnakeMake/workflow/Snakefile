@@ -53,6 +53,10 @@ rule gwas_liftover:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
     output:
         ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/gwaslab_environment.yml",
     script:
         "scripts/s04_liftover.py"
 
