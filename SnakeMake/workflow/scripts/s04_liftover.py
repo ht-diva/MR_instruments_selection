@@ -23,4 +23,4 @@ mysumstats.liftover(n_cores=3, from_build="19", to_build="38", remove=True)
 
 # Save the output
 #mysumstats.write("MR_instruments_best_snps_from_LB_liftover.txt")
-mysumstats.to_format("MR_instruments_best_snps_from_LB_liftover.txt", fmt="gwaslab")
+mysumstats.to_format("results/MR_instruments_best_snps_from_LB_liftover.txt", fmt="gwaslab")
