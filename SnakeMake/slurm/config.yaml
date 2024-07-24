@@ -29,7 +29,7 @@ set-resources:
         threads: *cores
     heterogenous_filter:
         mem_mb: 2048 + attempt * 2048
-        threads: 1
+        threads: *cores
     gwas_liftover:
         mem_mb: 2048 + attempt * 2048
         threads: 1
