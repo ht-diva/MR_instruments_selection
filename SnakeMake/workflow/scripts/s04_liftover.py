@@ -11,7 +11,8 @@ mysumstats = gl.Sumstats("results/MR_instruments_best_snps_from_LB.txt",
                          beta="BETA",
                          se="SE",
                          p="MLOG10P",
-                         verbose=True)
+                         sep=",",
+                         verbose=True) #what this verbose do?
 
 # See how to add how many SNPs we have and how many snps we loose after harmonization.
 # Perform basic checks
