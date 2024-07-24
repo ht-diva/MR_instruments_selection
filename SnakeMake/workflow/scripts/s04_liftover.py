@@ -1,12 +1,11 @@
 import gwaslab as gl
-import panda as pd
 
 # Load the summary statistics - verbose if True print logs
 mysumstats = gl.Sumstats("results/MR_instruments_best_snps_from_LB.txt",
                          snpid="SNPID",
                          chrom="CHR",
                          pos="POS",
-                         ea="EAF",
+                         ea="EA",
                          nea="NEA",
                          neaf="EAF",
                          beta="BETA",
@@ -22,7 +21,5 @@ mysumstats.basic_check(verbose=False)
 # Perform liftover, remove=True remove unmapped variants
 mysumstats.liftover(n_cores=3, from_build="19", to_build="38", remove=True)
 
-df = mysumstats.to_dataframe()
-
-# Save the output using pandas
-df.to_csv("results/MR_instruments_best_snps_from_LB_liftover.txt", sep=",", index=False)
+# Save the output
+mysumstats.write("results/MR_instruments_best_snps_from_LB_liftover.txt")
