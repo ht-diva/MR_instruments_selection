@@ -22,4 +22,4 @@ mysumstats.basic_check(verbose=False)
 mysumstats.liftover(n_cores=3, from_build="19", to_build="38", remove=True)
 
 # Save the output
-mysumstats.write("results/MR_instruments_best_snps_from_LB_liftover.txt")
+mysumstats.write("MR_instruments_best_snps_from_LB_liftover.txt")
