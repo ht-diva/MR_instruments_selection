@@ -10,7 +10,7 @@ mysumstats = gl.Sumstats("results/MR_instruments_best_snps_from_LB.txt",
                          neaf="EAF",
                          beta="BETA",
                          se="SE",
-                         p="MLOG10P",
+                         mlog10p="MLOG10P",
                          sep=",",
                          verbose=True)
 
