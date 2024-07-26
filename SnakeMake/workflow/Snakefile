@@ -57,6 +57,19 @@ rule gwas_liftover:
         runtimes=lambda wc, attempt: attempt * 20,
     conda:
         "envs/gwaslab_environment.yml",
+    params:
+        snpid="SNPID",
+        chrom="CHR",
+        pos="POS",
+        ea="EA",
+        nea="NEA",
+        neaf="EAF",
+        beta="BETA",
+        se="SE",
+        mlog10p="MLOG10P",
+        sep=",",
+        from_build="19",
+        to_build="38"
     script:
         "scripts/s04_liftover.py"
 
