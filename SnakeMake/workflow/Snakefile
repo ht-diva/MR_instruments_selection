@@ -51,7 +51,7 @@ rule select_best_SNP_from_LocusBreaker:
 
 rule gwas_liftover:
     input:
-        ws_path("MR_instruments_best_snps_from_LB.txt"),
+        input_file = ws_path("MR_instruments_best_snps_from_LB.txt"),
     output:
         output_file = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
         unmapped_output_file = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
