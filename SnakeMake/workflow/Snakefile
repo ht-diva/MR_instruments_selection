@@ -52,7 +52,8 @@ rule gwas_liftover:
     input:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
     output:
-        ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+        mapped = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+        unmapped = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
     conda:

@@ -29,6 +29,7 @@ import gwaslab as gl
 # Snakemake automatically provides these variables
 input_file = snakemake.input[0]
 output_file = snakemake.output[0]
+unmapped_output_file = snakemake.output[1]  # Add a second output file for unmapped SNPs
 
 params = snakemake.params
 
@@ -52,5 +53,13 @@ mysumstats.basic_check(verbose=False)
 # Perform liftover
 mysumstats.liftover(n_cores=3, from_build=params.from_build, to_build=params.to_build, remove=True)
 
-# Save the output
+# Identify SNPs that do not have corresponding matches (unmapped SNPs)
+unmapped_snps = mysumstats.df[mysumstats.df['chrom'].isnull() | mysumstats.df['pos'].isnull()]
+
+# Save the unmapped SNPs to a separate file
+unmapped_snps.to_csv(unmapped_output_file, sep=params.sep, index=False)
+
+# Save the output for successfully mapped SNPs
+mapped_snps = mysumstats.df.dropna(subset=['chrom', 'pos'])  # Drop SNPs with null chr or pos
+mysumstats.df = mapped_snps
 mysumstats.to_format(output_file, fmt="gwaslab")
