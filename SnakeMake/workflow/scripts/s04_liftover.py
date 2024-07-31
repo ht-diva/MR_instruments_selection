@@ -53,7 +53,7 @@ mysumstats.basic_check(verbose=False)
 mysumstats_ids = mysumstats.data[params.snpid]
 print(f"Number of SNPs before liftover: {len(mysumstats_ids)}")
 
-# Perform liftover
+# Perform liftover, remove=True remove unmapped variants
 mysumstats.liftover(n_cores=3, from_build=params.from_build, to_build=params.to_build, remove=True)
 
 # Save the list of SNP IDs after liftover
