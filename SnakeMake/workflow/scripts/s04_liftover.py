@@ -26,7 +26,6 @@
 
 import gwaslab as gl
 
-# Snakemake automatically provides these variables
 input_file = snakemake.input[0]
 output_file = snakemake.output[0]
 unmapped_output_file = snakemake.output[1]  # Add a second output file for unmapped SNPs
@@ -50,17 +49,24 @@ mysumstats = gl.Sumstats(input_file,
 # Perform basic checks
 mysumstats.basic_check(verbose=False)
 
+# Save the list of SNP IDs before liftover
+mysumstats_ids = mysumstats.data[params.snpid]
+print(f"Number of SNPs before liftover: {len(mysumstats_ids)}")
+
 # Perform liftover
 mysumstats.liftover(n_cores=3, from_build=params.from_build, to_build=params.to_build, remove=True)
 
-# Identify SNPs that do not have corresponding matches (unmapped SNPs)
-unmapped_snps = mysumstats.data[mysumstats.data[params.chrom].isnull() | mysumstats.data[params.pos].isnull()]
+# Save the list of SNP IDs after liftover
+mysumstats_ids_liftover = mysumstats.data[params.snpid]
+print(f"Number of SNPs after liftover: {len(mysumstats_ids_liftover)}")
 
-# Save the unmapped SNPs to a separate file
-unmapped_snps.to_csv(unmapped_output_file, sep=params.sep, index=False)
+#mysumstats_ids.compare(mysumstats_ids_liftover, keep_shape=True)
+# Compare the lists to find unmapped SNPs
+unmapped_snps = mysumstats_ids[~mysumstats_ids.isin(mysumstats_ids_liftover)]
 
-# Save the output for successfully mapped SNPs
-mapped_snps = mysumstats.data.dropna(subset=[params.chrom, params.pos])  # Drop SNPs with null chrom or pos
-mysumstats.data = mapped_snps
-mysumstats.to_format(output_file, fmt="gwaslab")
+# Save unmapped SNPs to a file
+unmapped_snps.to_csv(snakemake.output[1], sep=snakemake.params.sep, index=False)
+
+# Save the processed summary statistics
+mysumstats.to_format(snakemake.output[0], fmt="gwaslab")
 

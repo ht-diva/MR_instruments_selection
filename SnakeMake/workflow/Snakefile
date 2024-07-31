@@ -101,9 +101,10 @@ rule select_SNP_from_cojo:
         cojo=config.get("cojo_results"),
         mapping=config.get("mapping_filepath"),
     output:
-        ws_path("MR_instruments_conditional_analysis.txt"),
+        unconditional=ws_path("MR_instruments_unconditional_analysis.txt"),
+        conditional=ws_path("MR_instruments_conditional_analysis.txt"),
     resources:
-        runtimes=lambda wc, attempt: attempt * 20,
+        runtimes=lambda wc, attempt: attempt * 120,
     conda:
         "envs/r_environment.yml"
     shell:
@@ -111,5 +112,6 @@ rule select_SNP_from_cojo:
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
             --input {input.cojo} \
             --mapping {input.mapping} \
-            --output {output}
+            --cond_output {output.conditional} \
+            --uncond_output {output.unconditional}
         """
