@@ -11,8 +11,8 @@ option_list <- list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 cojo<-fread(opt$input)
-cond_path<-opt$cond_output
-uncond_path<-opt$uncond_output
+cond_path<-opt$conditional_output
+uncond_path<-opt$unconditional_output
 mapping<-fread(opt$mapping)
 
 ##mapping file

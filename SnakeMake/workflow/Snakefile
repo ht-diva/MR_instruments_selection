@@ -53,8 +53,8 @@ rule gwas_liftover:
     input:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
     output:
-        mapped = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
-        unmapped = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
+        output_file = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+        unmapped_output_file = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
     conda:
@@ -112,6 +112,6 @@ rule select_SNP_from_cojo:
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
             --input {input.cojo} \
             --mapping {input.mapping} \
-            --cond_output {output.conditional} \
-            --uncond_output {output.unconditional}
-        """
+            --conditional_output {output.conditional} \
+            --unconditional_output {output.unconditional}
+"""
