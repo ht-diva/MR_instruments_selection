@@ -54,12 +54,13 @@ mysumstats.basic_check(verbose=False)
 mysumstats.liftover(n_cores=3, from_build=params.from_build, to_build=params.to_build, remove=True)
 
 # Identify SNPs that do not have corresponding matches (unmapped SNPs)
-unmapped_snps = mysumstats.data[mysumstats.data['chrom'].isnull() | mysumstats.data['pos'].isnull()]
+unmapped_snps = mysumstats.data[mysumstats.data[params.chrom].isnull() | mysumstats.data[params.pos].isnull()]
 
 # Save the unmapped SNPs to a separate file
 unmapped_snps.to_csv(unmapped_output_file, sep=params.sep, index=False)
 
 # Save the output for successfully mapped SNPs
-mapped_snps = mysumstats.data.dropna(subset=['chrom', 'pos'])  # Drop SNPs with null chr or pos
+mapped_snps = mysumstats.data.dropna(subset=[params.chrom, params.pos])  # Drop SNPs with null chrom or pos
 mysumstats.data = mapped_snps
 mysumstats.to_format(output_file, fmt="gwaslab")
+
