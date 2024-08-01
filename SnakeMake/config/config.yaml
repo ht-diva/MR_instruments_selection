@@ -6,7 +6,7 @@ workspace_path: 'results'
 
 dest_path: 'destination'
 sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/output'
-cojo_results: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/25-Jun-24_cojo_res_independent_variants.csv'
+cojo_results: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/11-Jul-24_collected_credible_sets_benchmark.csv'
 mapping_filepath: 'data/mapped_gene_file_GRCh37_21052025.txt'
 locus_breaker_filepath: '/group/diangelantonio/users/gmauro/pqtl_downstream/results/break/collected_loci_excluding_mhc.csv'
 array_list_path: "data/"
