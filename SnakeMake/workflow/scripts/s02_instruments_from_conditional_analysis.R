@@ -12,8 +12,8 @@ option_list <- list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 cojo<-fread(opt$input)
-cond_path<-opt$conditional_output
-uncond_path<-opt$unconditional_output
+conditional_path<-opt$conditional_output
+unconditional_path<-opt$unconditional_output
 cojo_path<-opt$cojo_output
 mapping<-fread(opt$mapping)
 
@@ -41,6 +41,6 @@ cojo_conditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","n","freq_geno",
 cojo_unconditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","b","se","p","n","freq_geno",
                         "LD_r","snp_map","sdY","study_id","locus","EA","Fstats_j")]
 
-write.table(cojo_conditional, cond_path)
-write.table(cojo_un,uncond_path)
+write.table(cojo_conditional, conditional_path)
+write.table(cojo_unconditional,unconditional_path)
 write.table(cojo, cojo_path)
