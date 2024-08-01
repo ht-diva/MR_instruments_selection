@@ -47,7 +47,7 @@ mysumstats = gl.Sumstats(input_file,
                          verbose=True)
 
 # Perform basic checks
-mysumstats.basic_check(verbose=False)
+mysumstats.basic_check(verbose=True)
 
 # Save the list of SNP IDs before liftover
 mysumstats_ids = mysumstats.data[params.snpid]

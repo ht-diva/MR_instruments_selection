@@ -41,6 +41,6 @@ cojo_conditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","n","freq_geno",
 cojo_unconditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","b","se","p","n","freq_geno",
                         "LD_r","snp_map","sdY","study_id","locus","EA","Fstats_j")]
 
-write.table(cojo_conditional, conditional_path)
-write.table(cojo_unconditional,unconditional_path)
-write.table(cojo, cojo_path)
+fwrite(cojo_conditional, conditional_path)
+fwrite(cojo_unconditional,unconditional_path)
+fwrite(cojo, cojo_path)

@@ -19,6 +19,9 @@ rule all:
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
+        ws_path("MR_instruments_unconditional_analysis.txt"),
+        ws_path("MR_instruments_conditional_analysis.txt"),
+        ws_path("cojo_cis_trans.txt"),
 
 rule select_best_SNP_from_LocusBreaker:
     input:
@@ -63,8 +66,8 @@ rule gwas_liftover:
         snpid="SNPID",
         chrom="CHR",
         pos="POS",
-        ea="NEA", #EA
-        nea="EA", #NEA
+        ea="EA",
+        nea="NEA",
         neaf="EAF",
         beta="BETA",
         se="SE",
