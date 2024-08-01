@@ -105,7 +105,7 @@ rule select_SNP_from_cojo:
         conditional=ws_path("MR_instruments_conditional_analysis.txt"),
         cojo_cis_trans=ws_path("cojo_cis_trans.txt"),
     resources:
-        runtimes=lambda wc, attempt: attempt * 14400, #120
+        runtimes=lambda wc, attempt: attempt * 120,
     conda:
         "envs/r_environment.yml"
     shell:

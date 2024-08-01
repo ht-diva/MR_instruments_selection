@@ -5,10 +5,10 @@ source("workflow/scripts/s00_mapping_functions.R")
 
 option_list <- list(
   make_option("--input", default=NULL, help="Path and file name of Cojo"),
-  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans")),
+  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
   make_option("--conditional_output", default=NULL, help="Output path and name for list of instruments from Cojo"),
   make_option("--unconditional_output", default=NULL, help="Output path and name for list of instruments from Cojo unconditional"),
-  make_option("--cojo_output", default=NULL, help="Output path from Cojo with cis and trans")
+  make_option("--cojo_output", default=NULL, help="Output path from Cojo with cis and trans"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 cojo<-fread(opt$input)
