@@ -44,3 +44,5 @@ cojo_unconditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","b","se","p","n"
 fwrite(cojo_conditional, conditional_path)
 fwrite(cojo_unconditional,unconditional_path)
 fwrite(cojo, cojo_path)
+
+

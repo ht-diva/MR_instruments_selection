@@ -1,29 +1,3 @@
-#import gwaslab as gl
-
-# Load the summary statistics - verbose if True print logs
-#mysumstats = gl.Sumstats("results/MR_instruments_best_snps_from_LB.txt",
-#                         snpid="SNPID",
-#                         chrom="CHR",
-#                         pos="POS",
-#                        ea="EA",
-#                        nea="NEA",
-#                         neaf="EAF",
-#                         beta="BETA",
-#                         se="SE",
-#                         mlog10p="MLOG10P",
-#                         sep=",",
-#                         verbose=True)
-
-# Perform basic checks
-#mysumstats.basic_check(verbose=False)
-
-# Perform liftover, remove=True remove unmapped variants
-#mysumstats.liftover(n_cores=3, from_build="19", to_build="38", remove=True)
-
-# Save the output
-#mysumstats.write("MR_instruments_best_snps_from_LB_liftover.txt")
-#mysumstats.to_format("results/MR_instruments_best_snps_from_LB_liftover.txt", fmt="gwaslab")
-
 import gwaslab as gl
 
 input_file = snakemake.input.input_file
@@ -42,7 +16,7 @@ mysumstats = gl.Sumstats(input_file,
                          neaf=params.neaf,
                          beta=params.beta,
                          se=params.se,
-                         mlog10p=params.mlog10p,
+                         p=params.p,
                          sep=params.sep,
                          verbose=True)
 

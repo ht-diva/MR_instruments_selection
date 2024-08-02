@@ -22,6 +22,10 @@ rule all:
         ws_path("MR_instruments_unconditional_analysis.txt"),
         ws_path("MR_instruments_conditional_analysis.txt"),
         ws_path("cojo_cis_trans.txt"),
+        ws_path("MR_instruments_conditional_analysis_liftover.txt"),
+        ws_path("MR_instruments_conditional_analysis_unmapped.txt"),
+        ws_path("MR_instruments_unconditional_analysis_liftover.txt"),
+        ws_path("MR_instruments_unconditional_analysis_unmapped.txt"),
 
 rule select_best_SNP_from_LocusBreaker:
     input:
@@ -120,3 +124,55 @@ rule select_SNP_from_cojo:
             --unconditional_output {output.unconditional} \
             --cojo_output {output.cojo_cis_trans}
 """
+
+rule gwas_liftover_cojo_conditional:
+    input:
+        input_file = ws_path("MR_instruments_conditional_analysis.txt"),
+    output:
+        liftover_output_file = ws_path("MR_instruments_conditional_analysis_liftover.txt"),
+        unmapped_output_file = ws_path("MR_instruments_conditional_analysis_unmapped.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/gwaslab_environment.yml",
+    params:
+        snpid="SNP",
+        chrom="Chr",
+        pos="bp",
+        ea="EA",
+        nea="refA",
+        neaf="freq",
+        beta="bJ",
+        se="bJ_se",
+        p="pj",
+        sep=",",
+        from_build="19",
+        to_build="38"
+    script:
+        "scripts/s05_liftover.py"
+
+rule gwas_liftover_cojo_unconditional:
+    input:
+        input_file = ws_path("MR_instruments_unconditional_analysis.txt"),
+    output:
+        liftover_output_file = ws_path("MR_instruments_unconditional_analysis_liftover.txt"),
+        unmapped_output_file = ws_path("MR_instruments_unconditional_analysis_unmapped.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/gwaslab_environment.yml",
+    params:
+        snpid="SNP",
+        chrom="Chr",
+        pos="bp",
+        ea="EA",
+        nea="refA",
+        neaf="freq",
+        beta="b",
+        se="se",
+        p="p",
+        sep=",",
+        from_build="19",
+        to_build="38"
+    script:
+        "scripts/s05_liftover.py"
