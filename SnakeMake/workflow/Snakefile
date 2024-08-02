@@ -144,7 +144,7 @@ rule gwas_liftover_cojo_conditional:
         neaf="freq",
         beta="bJ",
         se="bJ_se",
-        p="pj",
+        p="pJ",
         sep=",",
         from_build="19",
         to_build="38"
