@@ -1,36 +1,49 @@
-#install.packages("rtracklayer")
-rm(list=ls())
-library(rtracklayer)
+suppressMessages(library(data.table))
+suppressMessages(library(optparse))
+suppressMessages(library(IRanges))
+suppressMessages(library(rtracklayer))
+source("workflow/scripts/s00_mapping_functions.R")
+
+option_list <- list(
+  make_option("--input", default=NULL, help="Path and file name of LB for MR"),
+  make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
+  make_option("--chain_file", default=NULL, help="Chain file to perform liftover")
+  make_option("--liftover_lb_output", default=NULL, help="Output path from MR IVs LB"))
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+lb <- fread(opt$input)
+chain_file <-fread(opt$chain_file)
+mapping <- fread(opt$mapping)
+lb_liftover_path <- opt$liftover_lb_output
 
 # Read the input file
 # Prepare the file for liftover
-a <- read.delim("/home/giulia.pontali/liftover/MR_instruments_best_snps_from_LB.txt", sep = ",")
-b <- a[, c(1, 2, 2, 3)]
-b$POS.1 <- b$POS.1 + 1
-b$CHR <- paste0("chr", b$CHR)
+#lb <- read.delim("/home/giulia.pontali/liftover/MR_instruments_best_snps_from_LB.txt", sep = ",")
+for_liftover <- lb[, c(1, 2, 2, 3)]
+for_liftover$POS.1 <- for_liftover$POS.1 + 1
+for_liftover$CHR <- paste0("chr", for_liftover$CHR)
 
-#write.table(b, "/home/giulia.pontali/liftover_file.bed", sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
+gr <- GRanges(seqnames = for_liftover$CHR,
+              ranges = IRanges(start = for_liftover$POS.1, end = for_liftover$POS.2),
+              strand = "*")
 
-chain_file <- import.chain("/home/giulia.pontali/liftover/hg19ToHg38.over.chain")
-# Read BED file
-bed_data <- import("liftover_file.bed", format = "BED")
-lifted_data <- liftOver(bed_data, chain_file)
+lifted_data <- liftOver(gr, chain_file)
 
 # Convert to a GRanges object
 lifted_granges <- unlist(lifted_data)
 lifted_df <- as.data.frame(lifted_granges)
 
-condition <- a$SNPID == lifted_df$name
+condition <- lb$SNPID == lifted_df$name
 result_list = list()
 
-for (i in 1:nrow(a)) {
+for (i in 1:nrow(lb)) {
   if (condition[i]) {
     # Full merge when condition is TRUE
-      merged_row = cbind(a[i, ], lifted_df[i, !(names(lifted_df) %in% names(a))])
+      merged_row = cbind(lb[i, ], lifted_df[i, !(names(lifted_df) %in% names(lb))])
       } else {
         # Partial merge on common columns when condition is FALSE
-          common_cols = intersect(names(a), names(lifted_df))
-          merged_row = merge(a[i, common_cols, drop = FALSE], lifted_df[i, common_cols, drop = FALSE])
+          common_cols = intersect(names(lb), names(lifted_df))
+          merged_row = merge(lb[i, common_cols, drop = FALSE], lifted_df[i, common_cols, drop = FALSE])
           }
 
     # Add the merged row to the list
@@ -39,13 +52,11 @@ for (i in 1:nrow(a)) {
 
 merged_df = do.call(rbind, result_list)
 
-mapping <- read.delim("/home/giulia.pontali/INTERVAL/mapped_gene_file_GRCh37.txt")
 mapping$target<-paste("seq.",gsub("-", ".",mapping$SeqId),sep="")
-mapping$cis_end<-(mapping$TSS+500000)
-mapping$cis_start<-(mapping$TSS-500000)
 
 merged <- merged_df %>%
-  left_join(mapping, by = c("phenotype_id" = "target"), relationship = "many-to-many")
+  left_join(mapping, by = c("phenotype_id" = "target"), relationship = "many-to-many") %>%
+  filter(CHR == chromosome)
 
 merged$DATASET="INTERVAL_CHRIS_META_LB"
 merged$TISSUE="WholeBlood"
@@ -62,7 +73,6 @@ names(merged)[names(merged) == "start"] <- "POS_38"
 names(merged)[names(merged) == "MLOG10P"] <- "MinusLog10PVAL"
 names(merged)[names(merged) == "EA"] <- "EFFECT_ALLELE"
 names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
-names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
 names(merged)[names(merged) == "Entrez_Gene_Name"] <- "GENE_NAME"
 names(merged)[names(merged) == "Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(merged)[names(merged) == "TSS"] <- "TSS_37"
@@ -70,3 +80,5 @@ names(merged)[names(merged) == "phenotype_id"] <- "SeqID"
 names(merged)[names(merged) == "UniProt_ID"] <- "UNIPROT"
 names(merged)[names(merged) == "Target_Name"] <- "PROTEIN_NAME"
 names(merged)[names(merged) == "Target_Full_Name"] <- "PROTEIN_LONG_NAME"
+
+fwrite(merged, lb_liftover_path)

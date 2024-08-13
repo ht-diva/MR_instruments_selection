@@ -70,7 +70,7 @@ LB$instrum<-LB$Fstats>=10 ##to check with Giulia >10 or >=10
 # table(LB$instrum)
 
 ##selecting only columns of interests
-LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","Fstats","instrum","phenotype_id","cis_or_trans")]
+LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","N", "MLOG10P","Fstats","instrum","phenotype_id","cis_or_trans")]
 ##here all the rows with instrum =T are instruments
 ##TO CHECK WITH MVP: if 2 rows with identical seqID, what should we do? keep both? choose the one with strongest pval?
 ############################################
@@ -82,7 +82,7 @@ if (FALSE%in%LB$instrum){
   for (i in 1:nrow(LB_not_passing)){
     ##build path (to modify with the right path)
     path<-paste(path_to_sumstats,LB_not_passing[["phenotype_id"]][i],"/",LB_not_passing[["phenotype_id"]][i],".gwaslab.tsv.gz",sep="")
-    sumstats<-fread(path,select = c("CHR","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P"))
+    sumstats<-fread(path,select = c("CHR","POS","SNPID","EA","NEA","EAF","BETA","SE","N", "MLOG10P"))
     cis<-sumstats[sumstats$CHR==LB_not_passing$chr[i],]
     cis<-cis[cis$POS>=LB_not_passing$start[i]&cis$POS<=LB_not_passing$end[i],]
     cis<-cis[cis$MLOG10P>=(-log10(5/NEF*10^(-8))),]

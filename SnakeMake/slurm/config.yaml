@@ -24,21 +24,13 @@ set-resources:
     select_best_SNP_from_LocusBreaker:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
-    select_SNP_from_cojo:
-        mem_mb: 2048 + attempt * 2048
-        threads: *cores
     heterogenous_filter:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
-    gwas_liftover:
+    LB_liftover:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
-    gwas_liftover_cojo_conditional:
-        mem_mb: 2048 + attempt * 2048
-        threads: *cores
-    gwas_liftover_cojo_unconditional:
-        mem_mb: 2048 + attempt * 2048
-        threads: *cores
+
 
 
 
