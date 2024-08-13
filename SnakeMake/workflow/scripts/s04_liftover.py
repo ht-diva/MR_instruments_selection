@@ -65,4 +65,3 @@ unmapped_snps = mysumstats_ids[~mysumstats_ids.isin(mysumstats_ids_liftover)]
 unmapped_snps.to_csv(snakemake.output.unmapped_output_file, sep=snakemake.params.sep, index=False)
 
 mysumstats.data.to_csv(snakemake.output.liftover_output_file, sep=snakemake.params.sep, index=False)
-

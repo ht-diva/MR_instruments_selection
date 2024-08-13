@@ -33,7 +33,35 @@ for (i in 1:nrow(cojo)){
 cojo_cis<-cojo[which(cojo$cis_or_trans=="cis"),]
 ##select unconditional beta se
 cojo_cis$Fstats_j<-((cojo_cis$bJ^2)/(cojo_cis$bJ_se^2))
-cojo_cis<-cojo_cis[which(cojo_cis$Fstats_j>10), ]
+cojo_cis<-cojo_cis[which(cojo_cis$Fstats_j>=10), ]
+
+#From mapping file we have to save the following header:
+#GENE_NAMEDATASET >
+#TISSUE
+#SNPID
+#RSID
+#CHR > Chr
+#POS_38
+#POS_37 BETA
+#SE
+#MinusLog10PVAL
+#EFFECT_ALLELE
+#OTHER_ALLELE
+#MAF
+#EAF
+#SAMPLESIZE
+#GENE_ENSEMBL
+#TSS_37
+#TSS_38
+#SeqID
+#UNIPROT
+#PROTEIN_NAME
+#PROTEIN_LONG_NAME
+#PVE
+#FILENAME
+#Gene.type
+
+#we have to save the documents as MVP wants:
 
 cojo_conditional<-cojo_cis[, c("Chr","SNP","bp","refA","freq","n","freq_geno",
                         "bJ","bJ_se","pJ","LD_r","snp_map","sdY","study_id","locus","EA", "Fstats_j")]

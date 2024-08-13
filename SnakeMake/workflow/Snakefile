@@ -56,31 +56,31 @@ rule select_best_SNP_from_LocusBreaker:
             --annot_output {output.annotated}
    """
 
-rule gwas_liftover:
-    input:
-        input_file = ws_path("MR_instruments_best_snps_from_LB.txt"),
-    output:
-        liftover_output_file = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
-        unmapped_output_file = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
-    resources:
-        runtimes=lambda wc, attempt: attempt * 20,
-    conda:
-        "envs/gwaslab_environment.yml",
-    params:
-        snpid="SNPID",
-        chrom="CHR",
-        pos="POS",
-        ea="EA",
-        nea="NEA",
-        neaf="EAF",
-        beta="BETA",
-        se="SE",
-        mlog10p="MLOG10P",
-        sep=",",
-        from_build="19",
-        to_build="38"
-    script:
-        "scripts/s04_liftover.py"
+#rule gwas_liftover:
+#    input:
+#        input_file = ws_path("MR_instruments_best_snps_from_LB.txt"),
+#    output:
+#        liftover_output_file = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+#        unmapped_output_file = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
+#    resources:
+#        runtimes=lambda wc, attempt: attempt * 20,
+#    conda:
+#        "envs/gwaslab_environment.yml",
+#    params:
+#        snpid="SNPID",
+#        chrom="CHR",
+#        pos="POS",
+#        ea="EA",
+#        nea="NEA",
+#        neaf="EAF",
+#        beta="BETA",
+#        se="SE",
+#        mlog10p="MLOG10P",
+#        sep=",",
+#        from_build="19",
+#        to_build="38"
+#    script:
+#        "scripts/s04_liftover.py"
 
 rule heterogenous_filter:
     input:
@@ -124,55 +124,3 @@ rule select_SNP_from_cojo:
             --unconditional_output {output.unconditional} \
             --cojo_output {output.cojo_cis_trans}
 """
-
-rule gwas_liftover_cojo_conditional:
-    input:
-        input_file = ws_path("MR_instruments_conditional_analysis.txt"),
-    output:
-        liftover_output_file = ws_path("MR_instruments_conditional_analysis_liftover.txt"),
-        unmapped_output_file = ws_path("MR_instruments_conditional_analysis_unmapped.txt"),
-    resources:
-        runtimes=lambda wc, attempt: attempt * 20,
-    conda:
-        "envs/gwaslab_environment.yml",
-    params:
-        snpid="SNP",
-        chrom="Chr",
-        pos="bp",
-        ea="EA",
-        nea="refA",
-        neaf="freq",
-        beta="bJ",
-        se="bJ_se",
-        p="pJ",
-        sep=",",
-        from_build="19",
-        to_build="38"
-    script:
-        "scripts/s05_liftover.py"
-
-rule gwas_liftover_cojo_unconditional:
-    input:
-        input_file = ws_path("MR_instruments_unconditional_analysis.txt"),
-    output:
-        liftover_output_file = ws_path("MR_instruments_unconditional_analysis_liftover.txt"),
-        unmapped_output_file = ws_path("MR_instruments_unconditional_analysis_unmapped.txt"),
-    resources:
-        runtimes=lambda wc, attempt: attempt * 20,
-    conda:
-        "envs/gwaslab_environment.yml",
-    params:
-        snpid="SNP",
-        chrom="Chr",
-        pos="bp",
-        ea="EA",
-        nea="refA",
-        neaf="freq",
-        beta="b",
-        se="se",
-        p="p",
-        sep=",",
-        from_build="19",
-        to_build="38"
-    script:
-        "scripts/s05_liftover.py"

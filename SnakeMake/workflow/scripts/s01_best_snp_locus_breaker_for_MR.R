@@ -66,7 +66,7 @@ LB<-LB[LB$cis_or_trans=="cis",]
 ##Fstats computation
 LB$Fstats<-((LB$BETA^2)/(LB$SE^2))
 ##filtering snp passing fstats threshold
-LB$instrum<-LB$Fstats>10 ##to check with Giulia >10 or >=10
+LB$instrum<-LB$Fstats>=10 ##to check with Giulia >10 or >=10
 # table(LB$instrum)
 
 ##selecting only columns of interests
@@ -87,7 +87,7 @@ if (FALSE%in%LB$instrum){
     cis<-cis[cis$POS>=LB_not_passing$start[i]&cis$POS<=LB_not_passing$end[i],]
     cis<-cis[cis$MLOG10P>=(-log10(5/NEF*10^(-8))),]
     cis$Fstats<-(cis$BETA^2)/(cis$SE^2)
-    cis<-cis[Fstats>10,]
+    cis<-cis[Fstats>=10,]
     if (nrow(cis)>=1){
       cis<-cis[which.max(cis$MLOG10P)]
       cis$instrum<-TRUE
@@ -102,7 +102,7 @@ if (FALSE%in%LB$instrum){
 
 
 ##selecting only columns of interests
-LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE","MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
+LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE", "N", "MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save
