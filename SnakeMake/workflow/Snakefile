@@ -53,7 +53,7 @@ rule LB_liftover:
         mapping=config.get("mapping_filepath"),
         chain_file=config.get("chain_file"),
     output:
-        liftover_lb=ws("MR_instruments_best_snps_from_LB_liftover.txt")
+        liftover_lb=ws_path("MR_instruments_best_snps_from_LB_liftover.txt")
     conda:
         "envs/r_environment.yml"
     shell:
