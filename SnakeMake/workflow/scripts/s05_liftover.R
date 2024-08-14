@@ -26,7 +26,7 @@ for_liftover$CHR <- paste0("chr", for_liftover$CHR)
 
 gr <- GRanges(seqnames = for_liftover$CHR,
               ranges = IRanges(start = for_liftover$POS.1, end = for_liftover$POS.2),
-              strand = "*")
+              strand = "*", names = for_liftover$SNPID)
 
 lifted_data <- liftOver(gr, chain_file)
 
@@ -34,7 +34,7 @@ lifted_data <- liftOver(gr, chain_file)
 lifted_granges <- unlist(lifted_data)
 lifted_df <- as.data.frame(lifted_granges)
 
-condition <- lb$SNPID == lifted_df$name
+condition <- lb$SNPID == lifted_df$names
 result_list = list()
 
 for (i in 1:nrow(lb)) {
@@ -54,10 +54,12 @@ for (i in 1:nrow(lb)) {
 merged_df = do.call(rbind, result_list)
 
 mapping$target<-paste("seq.",gsub("-", ".",mapping$SeqId),sep="")
+mapping$cis_end<-(mapping$TSS+500000)
+mapping$cis_start<-(mapping$TSS-500000)
 
 merged <- merged_df %>%
   left_join(mapping, by = c("phenotype_id" = "target"), relationship = "many-to-many") %>%
-  filter(CHR == chromosome)
+  filter(CHR == chromosome, POS >= cis_start & POS <= cis_end)
 
 merged$DATASET="INTERVAL_CHRIS_META_LB"
 merged$TISSUE="WholeBlood"
