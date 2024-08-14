@@ -25,7 +25,7 @@ for_liftover$POS.1 <- for_liftover$POS.1 + 1
 for_liftover$CHR <- paste0("chr", for_liftover$CHR)
 
 gr <- GRanges(seqnames = for_liftover$CHR,
-              ranges = IRanges(start = for_liftover$POS.1, end = for_liftover$POS.2),
+              ranges = IRanges(start = for_liftover$POS.1, end = for_liftover$POS.1),
               strand = "*", names = for_liftover$SNPID)
 
 lifted_data <- liftOver(gr, chain_file)
