@@ -8,7 +8,7 @@ source("workflow/scripts/s00_mapping_functions.R")
 option_list <- list(
   make_option("--input", default=NULL, help="Path and file name of LB for MR"),
   make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
-  make_option("--chain_file", default=NULL, help="Chain file to perform liftover")
+  make_option("--chain_file", default=NULL, help="Chain file to perform liftover"),
   make_option("--liftover_lb_output", default=NULL, help="Output path from MR IVs LB"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
