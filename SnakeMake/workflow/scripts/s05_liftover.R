@@ -24,6 +24,14 @@ for_liftover <- lb[, c(1, 2, 2, 3)]
 for_liftover$POS.1 <- for_liftover$POS.1 + 1
 for_liftover$CHR <- paste0("chr", for_liftover$CHR)
 
+# Check for missing values
+if (any(is.na(for_liftover$POS)) || any(is.na(for_liftover$POS.1))) {
+  stop("Missing values detected in position columns. Please check the input data.")
+}
+
+# Alternatively, you could filter out rows with missing values
+for_liftover <- na.omit(for_liftover)
+
 gr <- GRanges(seqnames = for_liftover$CHR,
               ranges = IRanges(start = for_liftover$POS, end = for_liftover$POS.1),
               strand = "*", names = for_liftover$SNPID)
@@ -59,7 +67,8 @@ mapping$cis_start<-(mapping$TSS-500000)
 
 merged <- merged_df %>%
   left_join(mapping, by = c("phenotype_id" = "target"), relationship = "many-to-many") %>%
-  filter(CHR == chromosome, POS >= cis_start & POS <= cis_end)
+  filter(CHR == chromosome)
+#, POS >= cis_start & POS <= cis_end)
 
 merged$DATASET="INTERVAL_CHRIS_META_LB"
 merged$TISSUE="WholeBlood"
@@ -68,7 +77,7 @@ merged$Gene.type = "protein_coding"
 
 merged <- merged %>%
   select(DATASET, TISSUE, SNPID, CHR, POS, start, BETA, SE, MLOG10P, EA, NEA,
-         EAF, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
+         EAF, N, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
          Target_Name, Target_Full_Name, FILENAME, Gene.type)
 
 names(merged)[names(merged) == "POS"] <- "POS_37"
@@ -76,6 +85,7 @@ names(merged)[names(merged) == "start"] <- "POS_38"
 names(merged)[names(merged) == "MLOG10P"] <- "MinusLog10PVAL"
 names(merged)[names(merged) == "EA"] <- "EFFECT_ALLELE"
 names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
+names(merged)[names(merged) == "N"] <- "SAMPLESIZE"
 names(merged)[names(merged) == "Entrez_Gene_Name"] <- "GENE_NAME"
 names(merged)[names(merged) == "Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(merged)[names(merged) == "TSS"] <- "TSS_37"
