@@ -13,7 +13,7 @@ option_list <- list(
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 lb <- fread(opt$input)
-chain_file <-fread(opt$chain_file)
+chain_file <- import.chain(opt$chain_file)
 mapping <- fread(opt$mapping)
 lb_liftover_path <- opt$liftover_lb_output
 
