@@ -30,6 +30,10 @@ set-resources:
     LB_liftover:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
+    select_SNP_from_cojo:
+      mem_mb: 2048 + attempt * 2048
+      threads: *cores
+
 
 
 

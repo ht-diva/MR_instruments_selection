@@ -54,7 +54,7 @@ merged$MAF <- pmin(merged$EAF, 1-merged$EAF)
 
 merged <- merged %>%
   dplyr::select(DATASET, TISSUE, SNPID, CHR, POS, start, BETA, SE, MLOG10P, EA, NEA, MAF,
-         EAF, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
+         EAF, Fstats, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
          Target_Name, Target_Full_Name, FILENAME, Gene.type)
 
 names(merged)[names(merged) == "POS"] <- "POS_37"
