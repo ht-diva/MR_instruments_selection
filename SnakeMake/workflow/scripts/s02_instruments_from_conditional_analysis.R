@@ -1,6 +1,8 @@
 suppressMessages(library(data.table))
 suppressMessages(library(optparse))
 suppressMessages(library(IRanges))
+suppressMessages(library(rtracklayer))
+suppressMessages(library(dplyr))
 source("workflow/scripts/s00_mapping_functions.R")
 
 option_list <- list(
