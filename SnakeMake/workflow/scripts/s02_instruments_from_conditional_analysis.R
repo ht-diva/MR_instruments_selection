@@ -123,4 +123,3 @@ cojo_unconditional<-merged_unconditional
 
 fwrite(cojo_conditional, conditional_path)
 fwrite(cojo_unconditional,unconditional_path)
-fwrite(cojo, cojo_path)
