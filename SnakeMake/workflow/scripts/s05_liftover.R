@@ -20,21 +20,11 @@ lb_liftover_path <- opt$liftover_lb_output
 # Read the input file
 # Prepare the file for liftover
 #lb <- read.delim("/home/giulia.pontali/liftover/MR_instruments_best_snps_from_LB.txt", sep = ",")
-for_liftover <- lb[, c(1, 2, 2, 3)]
-for_liftover$POS.1 <- for_liftover$POS.1 + 1
-for_liftover$CHR <- paste0("chr", for_liftover$CHR)
+lb$CHR <- paste0("chr", lb$CHR)
 
-# Check for missing values
-if (any(is.na(for_liftover$POS)) || any(is.na(for_liftover$POS.1))) {
-  stop("Missing values detected in position columns. Please check the input data.")
-}
-
-# Alternatively, you could filter out rows with missing values
-for_liftover <- na.omit(for_liftover)
-
-gr <- GRanges(seqnames = for_liftover$CHR,
-              ranges = IRanges(start = for_liftover$POS, end = for_liftover$POS.1),
-              strand = "*", names = for_liftover$SNPID)
+gr <- GRanges(seqnames = lb$CHR,
+              ranges = IRanges(start = lb$POS, end = lb$POS),
+              strand = "*", names = lb$SNPID)
 
 lifted_data <- liftOver(gr, chain_file)
 
@@ -42,42 +32,29 @@ lifted_data <- liftOver(gr, chain_file)
 lifted_granges <- unlist(lifted_data)
 lifted_df <- as.data.frame(lifted_granges)
 
-condition <- lb$SNPID == lifted_df$names
-result_list = list()
+lb <- lb[which(lb$SNPID %in% lifted_df$names), ]
 
-for (i in 1:nrow(lb)) {
-  if (condition[i]) {
-    # Full merge when condition is TRUE
-      merged_row = cbind(lb[i, ], lifted_df[i, !(names(lifted_df) %in% names(lb))])
-      } else {
-        # Partial merge on common columns when condition is FALSE
-          common_cols = intersect(names(lb), names(lifted_df))
-          merged_row = merge(lb[i, common_cols, drop = FALSE], lifted_df[i, common_cols, drop = FALSE])
-          }
-
-    # Add the merged row to the list
-    result_list[[i]] = merged_row
-}
-
-merged_df = do.call(rbind, result_list)
+merge_data <- merge(lb, lifted_df, by.x="SNPID", by.y="names", all=F)
+merge_data <- merge_data[!duplicated(merge_data), ]
+merge_data$CHR <- gsub("chr", "", merge_data$CHR)
 
 mapping$target<-paste("seq.",gsub("-", ".",mapping$SeqId),sep="")
 mapping$cis_end<-(mapping$TSS+500000)
 mapping$cis_start<-(mapping$TSS-500000)
 
-merged <- merged_df %>%
+merged <- merge_data %>%
   left_join(mapping, by = c("phenotype_id" = "target"), relationship = "many-to-many") %>%
-  filter(CHR == chromosome)
-#, POS >= cis_start & POS <= cis_end)
+  filter(CHR == chromosome, (POS >= cis_start & POS <= cis_end))
 
 merged$DATASET="INTERVAL_CHRIS_META_LB"
 merged$TISSUE="WholeBlood"
 merged$FILENAME=NA
 merged$Gene.type = "protein_coding"
+merged$MAF <- pmin(merged$EAF, 1-merged$EAF)
 
 merged <- merged %>%
-  select(DATASET, TISSUE, SNPID, CHR, POS, start, BETA, SE, MLOG10P, EA, NEA,
-         EAF, N, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
+  dplyr::select(DATASET, TISSUE, SNPID, CHR, POS, start, BETA, SE, MLOG10P, EA, NEA, MAF,
+         EAF, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
          Target_Name, Target_Full_Name, FILENAME, Gene.type)
 
 names(merged)[names(merged) == "POS"] <- "POS_37"
@@ -85,7 +62,6 @@ names(merged)[names(merged) == "start"] <- "POS_38"
 names(merged)[names(merged) == "MLOG10P"] <- "MinusLog10PVAL"
 names(merged)[names(merged) == "EA"] <- "EFFECT_ALLELE"
 names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
-names(merged)[names(merged) == "N"] <- "SAMPLESIZE"
 names(merged)[names(merged) == "Entrez_Gene_Name"] <- "GENE_NAME"
 names(merged)[names(merged) == "Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(merged)[names(merged) == "TSS"] <- "TSS_37"
