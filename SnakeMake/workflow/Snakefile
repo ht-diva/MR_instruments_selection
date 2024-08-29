@@ -14,6 +14,7 @@ rule all:
     input:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
         ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
+        ws_path("MR_instruments_best_snps_from_LB.vcf"),
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
@@ -47,6 +48,21 @@ rule select_best_SNP_from_LocusBreaker:
             --map_output {output.mapped} \
             --MR_output {output.MR} \
             --annot_output {output.annotated}
+   """
+rule vcf_file:
+    input:
+        lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
+    output:
+        lb_vcf=ws_path("MR_instruments_best_snps_from_LB.vcf"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+            Rscript workflow/scripts/s06_prepareVCF_file.R \
+             --input {input.lb} \
+             --vcf_lb_output {output.lb_vcf}
    """
 
 rule LB_liftover:
