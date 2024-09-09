@@ -75,6 +75,10 @@ rule bcftools_liftover:
         output_norm=ws_path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
         output_vcf=ws_path("MR_instruments_LB_liftover.vcf"),
         output_txt=ws_path("MR_instruments_LB_liftover.txt")
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/r_environment.yml"
     shell:
         """
          BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
