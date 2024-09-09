@@ -14,6 +14,8 @@ rule all:
     input:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
         ws_path("MR_instruments_best_snps_from_LB.vcf"),
+        ws_path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
+        ws_path("MR_instruments_LB_liftover.vcf"),
         ws_path("MR_instruments_LB_liftover.txt"),
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
