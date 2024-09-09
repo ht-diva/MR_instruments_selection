@@ -36,6 +36,9 @@ set-resources:
     vcf_file:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
+    bcftools_liftover:
+      mem_mb: 2048 + attempt * 2048
+      threads: *cores
 
 
 

@@ -71,9 +71,9 @@ rule bcftools_liftover:
         hg38=config.get("hg38_fasta_file"),
         chain_file=config.get("chain_file"),
     output:
-        output_norm=ws.path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
-        output_vcf=ws.path("MR_instruments_LB_liftover.vcf"),
-        output_txt=ws.path("MR_instruments_LB_liftover.txt")
+        output_norm=ws_path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
+        output_vcf=ws_path("MR_instruments_LB_liftover.vcf"),
+        output_txt=ws_path("MR_instruments_LB_liftover.txt")
     shell:
         """
          BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
@@ -84,23 +84,23 @@ rule bcftools_liftover:
          bcftools view {output.output_vcf}  > {output.output_txt}
    """
 
-rule LB_liftover:
-    input:
-        lb_ivs=ws_path("MR_instruments_best_snps_from_LB.txt"),
-        mapping=config.get("mapping_filepath"),
-        chain_file=config.get("chain_file"),
-    output:
-        liftover_lb=ws_path("MR_instruments_best_snps_from_LB_liftover.txt")
-    conda:
-        "envs/r_environment.yml"
-    shell:
-        """
-         Rscript workflow/scripts/s05_liftover.R \
-            --input {input.lb_ivs} \
-            --chain_file {input.chain_file} \
-            --mapping {input.mapping} \
-            --liftover_lb_output {output.liftover_lb}
-   """
+#rule LB_liftover:
+#    input:
+#        lb_ivs=ws_path("MR_instruments_best_snps_from_LB.txt"),
+#        mapping=config.get("mapping_filepath"),
+#        chain_file=config.get("chain_file"),
+#    output:
+#        liftover_lb=ws_path("MR_instruments_best_snps_from_LB_liftover.txt")
+#    conda:
+#        "envs/r_environment.yml"
+#    shell:
+#        """
+#         Rscript workflow/scripts/s05_liftover.R \
+#            --input {input.lb_ivs} \
+#            --chain_file {input.chain_file} \
+#            --mapping {input.mapping} \
+#            --liftover_lb_output {output.liftover_lb}
+#   """
 
 #rule gwas_liftover:
 #    input:
@@ -149,24 +149,24 @@ rule heterogenous_filter:
             --Isquare_thresh {params.Isquare}
    """
 
-rule select_SNP_from_cojo:
-    input:
-        cojo=config.get("cojo_results"),
-        chain_file=config.get("chain_file"),
-        mapping=config.get("mapping_filepath"),
-    output:
-        unconditional=ws_path("MR_instruments_unconditional_analysis.txt"),
-        conditional=ws_path("MR_instruments_conditional_analysis.txt"),
-    resources:
-        runtimes=lambda wc, attempt: attempt * 120,
-    conda:
-        "envs/r_environment.yml"
-    shell:
-        """
-        Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
-            --input {input.cojo} \
-            --mapping {input.mapping} \
-            --chain_file {input.chain_file} \
-            --conditional_output {output.conditional} \
-            --unconditional_output {output.unconditional}
-   """
+#rule select_SNP_from_cojo:
+#    input:
+#        cojo=config.get("cojo_results"),
+#        chain_file=config.get("chain_file"),
+#        mapping=config.get("mapping_filepath"),
+#    output:
+#        unconditional=ws_path("MR_instruments_unconditional_analysis.txt"),
+#        conditional=ws_path("MR_instruments_conditional_analysis.txt"),
+#    resources:
+#        runtimes=lambda wc, attempt: attempt * 120,
+#    conda:
+#        "envs/r_environment.yml"
+#    shell:
+#        """
+#        Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
+#            --input {input.cojo} \
+#            --mapping {input.mapping} \
+#            --chain_file {input.chain_file} \
+#            --conditional_output {output.conditional} \
+#            --unconditional_output {output.unconditional}
+#   """
