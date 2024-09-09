@@ -15,11 +15,10 @@ rule all:
         ws_path("MR_instruments_best_snps_from_LB.txt"),
         ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
         ws_path("MR_instruments_best_snps_from_LB.vcf"),
+        ws.path("MR_instruments_LB_liftover.txt")
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
-        ws_path("MR_instruments_unconditional_analysis.txt"),
-        ws_path("MR_instruments_conditional_analysis.txt"),
 
 rule select_best_SNP_from_LocusBreaker:
     input:
@@ -63,6 +62,26 @@ rule vcf_file:
             Rscript workflow/scripts/s06_prepareVCF_file.R \
              --input {input.lb} \
              --vcf_lb_output {output.lb_vcf}
+   """
+
+rule bcftools_liftover:
+    input:
+        lb_vcf=ws_path("MR_instruments_best_snps_from_LB.vcf"),
+        hg37=config.get("hg37_fasta_file"),
+        hg38=config.get("hg38_fasta_file"),
+        chain_file=config.get("chain_file"),
+    output:
+        output_norm=ws.path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
+        output_vcf=ws.path("MR_instruments_LB_liftover.vcf"),
+        output_txt=ws.path("MR_instruments_LB_liftover.txt")
+    shell:
+        """
+         BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
+         bgzip {input.lb_vcf} && \
+         tabix -p vcf {input.lb_vcf}.gz &&\
+         bcftools norm -f {input.hg37} -c s -Oz -o {input}.gz {output.output_norm} &&\
+         bcftools +liftover --no-version -Ou {output.output_norm} -- -s {input.hg37} -f {input.hg38} -c {input.chain_file} > {output.output_vcf} &&\
+         bcftools view {output.output_vcf}  > {output.output_txt}
    """
 
 rule LB_liftover:

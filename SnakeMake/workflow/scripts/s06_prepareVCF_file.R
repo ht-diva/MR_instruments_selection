@@ -66,3 +66,16 @@ write_vcf <- function(df, output_filename) {
 }
 
 write_vcf(df, vcf_path)
+
+#bgzip output_standard.vcf
+#tabix -p vcf output_standard.vcf.gz
+#normalization:
+#bcftools norm -f human_g1k_v37.fasta -c s -Oz -o data/normalizedtohuman_g1k_v37.vcf.gz data/output_standard.vcf.gz
+#bcftools norm -c x -f human_g1k_v37.fasta test_claudia.vcf.gz -o checked.vcf
+#bcftools norm -f human_g1k_v37.fasta -c w test_claudia.vcf.gz -Ob -o normalized.vcf.gz (mine does not work)
+
+#bcftools +liftover --no-version -Ou output_standard.vcf.gz -- -s human_g1k_v37.fasta -f hg38.fa -c hg19ToHg38.over.chain.gz > output.lifted.vcf
+#bcftools view output.lifted.vcf | less -S
+#bcftools view output.lifted.vcf > output.txt
+
+#vcf_data <- read.table("/group//users/giulia.pontali/output.txt", header = F, comment.char = "#", sep = "\t", stringsAsFactors = FALSE)diangelantonio
