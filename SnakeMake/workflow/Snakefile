@@ -106,7 +106,7 @@ rule LB_liftover_ivs:
     shell:
         """
          Rscript workflow/scripts/s05_liftover.R \
-            --input {input.lb_ivs} \
+            --input {input.lb} \
             --input_liftover {input.liftover} \
             --mapping {input.mapping} \
             --liftover_lb_output {output.lb_mvp}
@@ -135,7 +135,7 @@ rule heterogenous_filter:
 
 rule vcf_file_Cojo:
     input:
-        cojo = config.get("cojo_results"),
+        cojo=config.get("cojo_results"),
     output:
         cojo_vcf=ws_path("cojo.vcf"),
     resources:
