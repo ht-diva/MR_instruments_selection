@@ -147,7 +147,7 @@ rule vcf_file_cojo:
         """
         Rscript workflow/scripts/s07_prepareVCF_cojo_file.R \
          --input {input.cojo} \
-         --vcf_lb_output {output.cojo_vcf}
+         --vcf_cojo_output {output.cojo_vcf}
    """
 
 rule bcftools_liftover_cojo:

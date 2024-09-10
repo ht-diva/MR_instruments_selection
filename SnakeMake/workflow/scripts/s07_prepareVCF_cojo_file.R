@@ -6,20 +6,20 @@ suppressMessages(library(dplyr))
 source("workflow/scripts/s00_mapping_functions.R")
 
 option_list <- list(
-  make_option("--input", default=NULL, help="Path and file name of LB for MR"),
-  make_option("--vcf_lb_output", default=NULL, help="Output path from vcf"))
+  make_option("--input", default=NULL, help="Path and file name of Cojo for MR"),
+  make_option("--vcf_cojo_output", default=NULL, help="Output path from vcf"))
 
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 df <- fread(opt$input)
-vcf_path <- opt$vcf_lb_output
+vcf_path <- opt$vcf_cojo_output
 
 df <- df[order(df$Chr, df$bp), ]
 split_variants <- strsplit(df$SNP, ":")
 
 # Extract EA (Effect Allele) and NEA (Non-Effect Allele)
-cojo$EA <- sapply(split_variants, function(x) x[3])
-cojo$NEA <- sapply(split_variants, function(x) x[4])
+df$EA <- sapply(split_variants, function(x) x[3])
+df$NEA <- sapply(split_variants, function(x) x[4])
 # Function to write VCF file
 write_vcf <- function(df, output_filename) {
   # Create a connection to write to a file
