@@ -23,8 +23,6 @@ rule all:
         ws_path("heterogenous_LB.txt"),
         ws_path("cojo.vcf")
 
-
-
 rule select_best_SNP_from_LocusBreaker:
     input:
         lb=config.get("locus_breaker_filepath"),
