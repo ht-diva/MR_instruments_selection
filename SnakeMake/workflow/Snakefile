@@ -21,7 +21,10 @@ rule all:
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
-        ws_path("cojo.vcf")
+        ws_path("cojo.vcf"),
+        ws_path("cojo_standard.vcf.gz"),
+        ws_path("cojo_liftover.vcf"),
+        ws_path("cojo_liftover.txt"),
 
 rule select_best_SNP_from_LocusBreaker:
     input:
@@ -131,7 +134,7 @@ rule heterogenous_filter:
             --Isquare_thresh {params.Isquare}
    """
 
-rule vcf_file_Cojo:
+rule vcf_file_cojo:
     input:
         cojo=config.get("cojo_results"),
     output:
@@ -142,7 +145,7 @@ rule vcf_file_Cojo:
         "envs/r_environment.yml"
     shell:
         """
-        Rscript workflow/scripts/s07_prepareVCF_file.R \
+        Rscript workflow/scripts/s07_prepareVCF_cojo_file.R \
          --input {input.cojo} \
          --vcf_lb_output {output.cojo_vcf}
    """
@@ -150,7 +153,7 @@ rule vcf_file_Cojo:
 rule bcftools_liftover_cojo:
     input:
         cojo_vcf = ws_path("cojo.vcf"),
-        hg37 = config.get("hg37_fasta_file"), 
+        hg37 = config.get("hg37_fasta_file"),
         hg38 = config.get("hg38_fasta_file"),
         chain_file = config.get("chain_file"),
     output:
