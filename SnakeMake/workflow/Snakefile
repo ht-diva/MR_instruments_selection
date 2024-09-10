@@ -81,13 +81,25 @@ rule bcftools_liftover:
         "envs/r_environment.yml"
     shell:
         """
-         BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
-         bgzip {input.lb_vcf} > {input.lb_vcf}.gz && \
-         tabix -p vcf {input.lb_vcf}.gz &&\
-         bcftools norm -f {input.hg37} -c s -Oz -o {input}.gz {output.output_norm} &&\
-         bcftools +liftover --no-version -Ou {output.output_norm} -- -s {input.hg37} -f {input.hg38} -c {input.chain_file} > {output.output_vcf} &&\
-         bcftools view {output.output_vcf}  > {output.output_txt}
+        export BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505
+
+        # Step 1: Compress the input VCF file
+        bgzip -c {input.lb_vcf} > {input.lb_vcf}.gz
+
+        # Step 2: Index the compressed VCF
+        tabix -p vcf {input.lb_vcf}.gz
+
+        # Step 3: Normalize the VCF file
+        bcftools norm -f {input.hg37} -c s -Oz -o {output.output_norm} {input.lb_vcf}.gz
+
+        # Step 4: Perform liftover
+        bcftools +liftover --no-version -Ou {output.output_norm} -- \
+            -s {input.hg37} -f {input.hg38} -c {input.chain_file} > {output.output_vcf}
+
+        # Step 5: Convert VCF to a text file for readability
+        bcftools view {output.output_vcf} > {output.output_txt}
    """
+
 
 #rule LB_liftover:
 #    input:
