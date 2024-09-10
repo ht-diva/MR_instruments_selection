@@ -21,6 +21,8 @@ rule all:
         ws_path("mapped_LB.txt"),
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
+        ws_path("cojo.vcf")
+
 
 
 rule select_best_SNP_from_LocusBreaker:
@@ -52,7 +54,6 @@ rule select_best_SNP_from_LocusBreaker:
             --annot_output {output.annotated}
    """
 
-
 rule vcf_file_LB:
     input:
         lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
@@ -68,7 +69,6 @@ rule vcf_file_LB:
              --input {input.lb} \
              --vcf_lb_output {output.lb_vcf}
    """
-
 
 rule bcftools_liftover_LB:
     input:
@@ -112,33 +112,6 @@ rule LB_liftover_ivs:
             --liftover_lb_output {output.lb_mvp}
    """
 
-# rule gwas_liftover:
-#    input:
-#        input_file = ws_path("MR_instruments_best_snps_from_LB.txt"),
-#    output:
-#        liftover_output_file = ws_path("MR_instruments_best_snps_from_LB_liftover.txt"),
-#        unmapped_output_file = ws_path("MR_instruments_best_snps_from_LB_unmapped.txt"),
-#    resources:
-#        runtimes=lambda wc, attempt: attempt * 20,
-#    conda:
-#        "envs/gwaslab_environment.yml",
-#    params:
-#        snpid="SNPID",
-#        chrom="CHR",
-#        pos="POS",
-#        ea="EA",
-#        nea="NEA",
-#        neaf="EAF",
-#        beta="BETA",
-#        se="SE",
-#        mlog10p="MLOG10P",
-#        sep=",",
-#        from_build="19",
-#        to_build="38"
-#    script:
-#        "scripts/s04_liftover.py"
-
-
 rule heterogenous_filter:
     input:
         ws_path("annotated_LB.txt"),
@@ -158,6 +131,22 @@ rule heterogenous_filter:
             --NEF {params.NEF} \
             --het_output {output} \
             --Isquare_thresh {params.Isquare}
+   """
+
+rule vcf_file_Cojo:
+    input:
+        cojo = config.get("cojo_results"),
+    output:
+        cojo_vcf=ws_path("cojo.vcf"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 20,
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+        Rscript workflow/scripts/s06_prepareVCF_file.R \
+         --input {input.cojo} \
+         --vcf_lb_output {output.cojo_vcf}
    """
 
 
