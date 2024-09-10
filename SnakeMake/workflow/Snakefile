@@ -94,8 +94,7 @@ rule bcftools_liftover_LB:
         bcftools view {output.output_vcf} > {output.output_txt}
    """
 
-
- rule LB_liftover_ivs:
+rule LB_liftover_ivs:
     input:
         lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
         liftover=ws_path("MR_instruments_LB_liftover.txt"),
