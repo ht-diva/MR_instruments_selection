@@ -102,7 +102,7 @@ if (FALSE%in%LB$instrum){
 
 
 ##selecting only columns of interests
-LB<-LB[,c("chr","POS","SNPID","EA","NEA","EAF","BETA","SE", "N", "MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
+LB<-LB[,c("CHR","POS","SNPID","EA","NEA","EAF","BETA","SE", "N", "MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save

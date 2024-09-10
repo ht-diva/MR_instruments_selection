@@ -78,4 +78,4 @@ write_vcf(df, vcf_path)
 #bcftools view output.lifted.vcf | less -S
 #bcftools view output.lifted.vcf > output.txt
 
-#vcf_data <- read.table("/group//users/giulia.pontali/output.txt", header = F, comment.char = "#", sep = "\t", stringsAsFactors = FALSE)diangelantonio
+#vcf_data <- read.table("/group//users/giulia.pontali/output.txt", header = F, comment.char = "#", sep = "\t", stringsAsFactors = FALSE)

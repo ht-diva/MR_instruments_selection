@@ -52,7 +52,7 @@ rule select_best_SNP_from_LocusBreaker:
    """
 
 
-rule vcf_file:
+rule vcf_file_LB:
     input:
         lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
     output:
@@ -69,7 +69,7 @@ rule vcf_file:
    """
 
 
-rule bcftools_liftover:
+rule bcftools_liftover_LB:
     input:
         lb_vcf=ws_path("MR_instruments_best_snps_from_LB.vcf"),
         hg37=config.get("hg37_fasta_file"),
@@ -94,23 +94,23 @@ rule bcftools_liftover:
    """
 
 
-# rule LB_liftover:
-#    input:
-#        lb_ivs=ws_path("MR_instruments_best_snps_from_LB.txt"),
-#        mapping=config.get("mapping_filepath"),
-#        chain_file=config.get("chain_file"),
-#    output:
-#        liftover_lb=ws_path("MR_instruments_best_snps_from_LB_liftover.txt")
-#    conda:
-#        "envs/r_environment.yml"
-#    shell:
-#        """
-#         Rscript workflow/scripts/s05_liftover.R \
-#            --input {input.lb_ivs} \
-#            --chain_file {input.chain_file} \
-#            --mapping {input.mapping} \
-#            --liftover_lb_output {output.liftover_lb}
-#   """
+ rule LB_liftover_ivs:
+    input:
+        lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
+        liftover=ws_path("MR_instruments_LB_liftover.txt"),
+        mapping=config.get("mapping_filepath"),
+    output:
+        lb_mvp=ws_path("MR_instruments_best_snps_from_LB_MVP.txt")
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+         Rscript workflow/scripts/s05_liftover.R \
+            --input {input.lb_ivs} \
+            --input_liftover {input.liftover} \
+            --mapping {input.mapping} \
+            --liftover_lb_output {output.lb_mvp}
+   """
 
 # rule gwas_liftover:
 #    input:

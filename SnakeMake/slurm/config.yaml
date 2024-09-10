@@ -27,16 +27,16 @@ set-resources:
     heterogenous_filter:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
-    LB_liftover:
+    LB_liftover_ivs:
         mem_mb: 2048 + attempt * 2048
         threads: *cores
     select_SNP_from_cojo:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
-    vcf_file:
+    vcf_file_LB:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
-    bcftools_liftover:
+    bcftools_liftover_LB:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
 
