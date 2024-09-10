@@ -21,6 +21,7 @@ rule all:
         ws_path("annotated_LB.txt"),
         ws_path("heterogenous_LB.txt"),
 
+
 rule select_best_SNP_from_LocusBreaker:
     input:
         lb=config.get("locus_breaker_filepath"),
@@ -49,6 +50,8 @@ rule select_best_SNP_from_LocusBreaker:
             --MR_output {output.MR} \
             --annot_output {output.annotated}
    """
+
+
 rule vcf_file:
     input:
         lb=ws_path("MR_instruments_best_snps_from_LB.txt"),
@@ -65,6 +68,7 @@ rule vcf_file:
              --vcf_lb_output {output.lb_vcf}
    """
 
+
 rule bcftools_liftover:
     input:
         lb_vcf=ws_path("MR_instruments_best_snps_from_LB.vcf"),
@@ -74,11 +78,11 @@ rule bcftools_liftover:
     output:
         output_norm=ws_path("MR_instruments_best_snps_from_LB_standard.vcf.gz"),
         output_vcf=ws_path("MR_instruments_LB_liftover.vcf"),
-        output_txt=ws_path("MR_instruments_LB_liftover.txt")
+        output_txt=ws_path("MR_instruments_LB_liftover.txt"),
     resources:
         runtimes=lambda wc, attempt: attempt * 20,
     conda:
-        "envs/r_environment.yml"
+        "envs/bcftools.yml"
     shell:
         """
         export BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
@@ -90,7 +94,7 @@ rule bcftools_liftover:
    """
 
 
-#rule LB_liftover:
+# rule LB_liftover:
 #    input:
 #        lb_ivs=ws_path("MR_instruments_best_snps_from_LB.txt"),
 #        mapping=config.get("mapping_filepath"),
@@ -108,7 +112,7 @@ rule bcftools_liftover:
 #            --liftover_lb_output {output.liftover_lb}
 #   """
 
-#rule gwas_liftover:
+# rule gwas_liftover:
 #    input:
 #        input_file = ws_path("MR_instruments_best_snps_from_LB.txt"),
 #    output:
@@ -134,6 +138,7 @@ rule bcftools_liftover:
 #    script:
 #        "scripts/s04_liftover.py"
 
+
 rule heterogenous_filter:
     input:
         ws_path("annotated_LB.txt"),
@@ -143,7 +148,7 @@ rule heterogenous_filter:
         runtimes=lambda wc, attempt: attempt * 20,
     params:
         NEF=config.get("params").get("nef"),
-        Isquare=config.get("params").get("Isquare")
+        Isquare=config.get("params").get("Isquare"),
     conda:
         "envs/r_environment.yml"
     shell:
@@ -155,7 +160,8 @@ rule heterogenous_filter:
             --Isquare_thresh {params.Isquare}
    """
 
-#rule select_SNP_from_cojo:
+
+# rule select_SNP_from_cojo:
 #    input:
 #        cojo=config.get("cojo_results"),
 #        chain_file=config.get("chain_file"),
