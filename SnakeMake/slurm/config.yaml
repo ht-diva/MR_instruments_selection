@@ -45,6 +45,10 @@ set-resources:
     vcf_file_Cojo:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
+    bcftools_liftover_cojo:
+      mem_mb: 2048 + attempt * 2048
+      threads: *cores
+
 
 
 
