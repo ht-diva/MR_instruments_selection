@@ -149,9 +149,9 @@ rule vcf_file_Cojo:
 
 rule bcftools_liftover_cojo:
     input:
-        cojo_vcf = ws_path("cojo.vcf"), \
-        hg37 = config.get("hg37_fasta_file"), \
-        hg38 = config.get("hg38_fasta_file"), \
+        cojo_vcf = ws_path("cojo.vcf"),
+        hg37 = config.get("hg37_fasta_file"), 
+        hg38 = config.get("hg38_fasta_file"),
         chain_file = config.get("chain_file"),
     output:
         output_norm=ws_path("cojo_standard.vcf.gz"),
