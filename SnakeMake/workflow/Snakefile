@@ -82,7 +82,7 @@ rule bcftools_liftover:
     shell:
         """
         export BCFTOOLS_PLUGINS=/group/diangelantonio/software/liftOver_plugins/score_1.20-20240505 && \
-        bgzip -c {input.lb_vcf} > {input.lb_vcf}.gz && \
+        bgzip {input.lb_vcf} > {input.lb_vcf}.gz && \
         tabix -p vcf {input.lb_vcf}.gz && \
         bcftools norm -f {input.hg37} -c s -Oz -o {output.output_norm} {input.lb_vcf}.gz && \
         bcftools +liftover --no-version -Ou {output.output_norm} -- -s {input.hg37} -f {input.hg38} -c {input.chain_file} > {output.output_vcf} && \
