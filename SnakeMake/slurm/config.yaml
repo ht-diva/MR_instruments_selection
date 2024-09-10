@@ -42,7 +42,7 @@ set-resources:
     LB_liftover_ivs:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
-    vcf_file_Cojo:
+    vcf_file_cojo:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
     bcftools_liftover_cojo:
