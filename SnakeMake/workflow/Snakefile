@@ -142,7 +142,7 @@ rule vcf_file_Cojo:
         "envs/r_environment.yml"
     shell:
         """
-        Rscript workflow/scripts/s06_prepareVCF_file.R \
+        Rscript workflow/scripts/s07_prepareVCF_file.R \
          --input {input.cojo} \
          --vcf_lb_output {output.cojo_vcf}
    """

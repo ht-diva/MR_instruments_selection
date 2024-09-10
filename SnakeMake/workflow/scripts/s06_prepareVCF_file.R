@@ -32,9 +32,6 @@ write_vcf <- function(df, output_filename) {
     writeLines("##INFO=<ID=SE,Number=1,Type=Float,Description=Standard Error>", vcf_file)
     writeLines("##INFO=<ID=N,Number=1,Type=Integer,Description=Sample Size>", vcf_file)
     writeLines("##INFO=<ID=MLOG10P,Number=1,Type=Float,Description=Negative Log10 P-value>", vcf_file)
-    writeLines("##INFO=<ID=phenotype_id,Number=1,Type=String,Description=Phenotype ID>", vcf_file)
-    writeLines("##INFO=<ID=cis_or_trans,Number=1,Type=String,Description=Cis or Trans>", vcf_file)
-    writeLines("##INFO=<ID=Fstats,Number=1,Type=Float,Description=F-statistics>", vcf_file)
     writeLines("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO", vcf_file)
 
     # Write each row as a VCF entry
@@ -50,10 +47,7 @@ write_vcf <- function(df, output_filename) {
 
       # Create the INFO field (customize as needed)
       info <- paste0("EAF=", df$EAF[i], ";BETA=", df$BETA[i], ";SE=", df$SE[i],
-                     ";N=", df$N[i], ";MLOG10P=", df$MLOG10P[i],
-                     ";phenotype_id=", df$phenotype_id[i],
-                     ";cis_or_trans=", df$cis_or_trans[i],
-                     ";Fstats=", df$Fstats[i])
+                     ";N=", df$N[i], ";MLOG10P=", df$MLOG10P[i])
 
       # Write the line to the VCF file
       line <- paste(chrom, pos, id, ref, alt, qual, filter, info, sep = "\t")
