@@ -174,24 +174,24 @@ rule bcftools_liftover_cojo:
         bcftools view {output.output_vcf} > {output.output_txt}
 """
 
-# rule select_SNP_from_cojo:
-#    input:
-#        cojo=config.get("cojo_results"),
-#        chain_file=config.get("chain_file"),
-#        mapping=config.get("mapping_filepath"),
-#    output:
-#        unconditional=ws_path("MR_instruments_unconditional_analysis.txt"),
-#        conditional=ws_path("MR_instruments_conditional_analysis.txt"),
-#    resources:
-#        runtimes=lambda wc, attempt: attempt * 120,
-#    conda:
-#        "envs/r_environment.yml"
-#    shell:
-#        """
-#        Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
-#            --input {input.cojo} \
-#            --mapping {input.mapping} \
-#            --chain_file {input.chain_file} \
-#            --conditional_output {output.conditional} \
-#            --unconditional_output {output.unconditional}
-#   """
+rule select_SNP_from_cojo:
+    input:
+        cojo=config.get("cojo_results"),
+        liftover=ws_path("cojo_liftover.txt"),
+        mapping=config.get("mapping_filepath"),
+    output:
+        unconditional=ws_path("MR_instruments_unconditional_analysis_MVP.txt"),
+        conditional=ws_path("MR_instruments_conditional_analysis_MVP.txt"),
+    resources:
+        runtimes=lambda wc, attempt: attempt * 120,
+    conda:
+        "envs/r_environment.yml"
+    shell:
+        """
+        Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
+            --input {input.cojo} \
+            --liftover {input.liftover} \
+            --mapping {input.mapping} \
+            --conditional_output {output.conditional} \
+            --unconditional_output {output.unconditional}
+"""

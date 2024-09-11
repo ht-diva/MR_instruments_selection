@@ -41,7 +41,7 @@ merged$MAF <- pmin(merged$EAF, 1-merged$EAF)
 
 merged <- merged %>%
   dplyr::select(DATASET, TISSUE, SNPID, CHR, POS, V2, BETA, SE, MLOG10P, EA, NEA, MAF,
-                EAF, Fstats, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
+                EAF, N, Fstats, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
                 Target_Name, Target_Full_Name, FILENAME, Gene.type)
 
 names(merged)[names(merged) == "POS"] <- "POS_37"
@@ -49,6 +49,7 @@ names(merged)[names(merged) == "V2"] <- "POS_38"
 names(merged)[names(merged) == "MLOG10P"] <- "MinusLog10PVAL"
 names(merged)[names(merged) == "EA"] <- "EFFECT_ALLELE"
 names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
+names(merged)[names(merged) == "N"] <- "SAMPLESIZE"
 names(merged)[names(merged) == "Entrez_Gene_Name"] <- "GENE_NAME"
 names(merged)[names(merged) == "Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(merged)[names(merged) == "TSS"] <- "TSS_37"
