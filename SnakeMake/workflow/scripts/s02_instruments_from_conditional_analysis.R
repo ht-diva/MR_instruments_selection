@@ -46,7 +46,7 @@ merged_unconditional <- cojo_cis_unconditional %>%
   left_join(mapping, by = c("study_id" = "target"), relationship = "many-to-many") %>%
   filter(Chr == chromosome, (bp >= cis_start & bp <= cis_end))
 
-merged_unconditional$DATASET="INTERVAL_CHRIS_META_COJO"
+merged_unconditional$DATASET="INTERVAL_CHRIS_META_COJO_unconditional"
 merged_unconditional$TISSUE="WholeBlood"
 merged_unconditional$FILENAME=NA
 merged_unconditional$Gene.type = "protein_coding"
@@ -82,7 +82,7 @@ merged_conditional <- cojo_cis_conditional %>%
   left_join(mapping, by = c("study_id" = "target"), relationship = "many-to-many") %>%
   filter(Chr == chromosome, (bp >= cis_start & bp <= cis_end))
 
-merged_conditional$DATASET="INTERVAL_CHRIS_META_COJO"
+merged_conditional$DATASET="INTERVAL_CHRIS_META_COJO_conditional"
 merged_conditional$TISSUE="WholeBlood"
 merged_conditional$FILENAME=NA
 merged_conditional$Gene.type = "protein_coding"
