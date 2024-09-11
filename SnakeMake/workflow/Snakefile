@@ -176,7 +176,7 @@ rule bcftools_liftover_cojo:
         bcftools view {output.output_vcf} > {output.output_txt}
 """
 
-rule select_SNP_from_cojo:
+rule select_ivs_from_cojo:
     input:
         cojo=config.get("cojo_results"),
         liftover=ws_path("cojo_liftover.txt"),

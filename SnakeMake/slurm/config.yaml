@@ -48,7 +48,7 @@ set-resources:
     bcftools_liftover_cojo:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
-    select_SNP_from_cojo:
+    select_ivs_from_cojo:
       mem_mb: 2048 + attempt * 2048
       threads: *cores
 
