@@ -25,6 +25,8 @@ rule all:
         ws_path("cojo_standard.vcf.gz"),
         ws_path("cojo_liftover.vcf"),
         ws_path("cojo_liftover.txt"),
+        ws_path("MR_instruments_unconditional_analysis_MVP.txt"),
+        ws_path("MR_instruments_conditional_analysis_MVP.txt")
 
 rule select_best_SNP_from_LocusBreaker:
     input:
