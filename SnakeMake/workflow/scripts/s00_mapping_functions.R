@@ -20,6 +20,14 @@ map <- function(seqId = character(), chr, start, end, mapping_file) {
   }
 }
 
+check_boundaries <- function(start, end, cis_start, cis_end) {
+  ir1 <- IRanges(start = cis_start, end = cis_end)
+  ir2 <- IRanges(start = start, end = end)
+  ov <- countOverlaps(ir1, ir2)
+
+  # If there's at least one overlap, return TRUE
+  return(ov >= 1)
+}
 
 
 assay_annotation_on_dataset <-

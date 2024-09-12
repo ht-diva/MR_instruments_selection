@@ -29,9 +29,23 @@ mapping$cis_start <- mapping$TSS - 500000
 mapping$cis_end <- mapping$TSS + 500000
 
 
-merged <- data %>%
+merged_within_cis <- lb %>%
   left_join(mapping, by = c("phenotype_id" = "SeqId"), relationship = "many-to-many") %>%
-  filter(CHR == chromosome, (POS >= cis_start & POS <= cis_end))
+  filter(CHR == chromosome) %>%
+  mutate(in_cis_range = check_boundaries(start = POS, end = POS, cis_start = cis_start, cis_end = cis_end)) %>%
+  filter(in_cis_range == TRUE)
+
+collapsed_df <- merged_within_cis %>%
+  # Step 1: Filter rows where in_cis_range == TRUE
+  filter(in_cis_range == TRUE) %>%
+  # Step 2: Group by phenotype_id and SNPID
+  group_by(phenotype_id, SNPID) %>%
+  # Step 3: Collapse all columns by concatenating values where necessary
+  summarise(
+    across(everything(), ~ paste(unique(.), collapse = "|"), .names = "collapsed_{col}")
+  ) %>%
+  # Step 4: Ungroup to return the result to a normal dataframe
+  ungroup()
 
 merged$DATASET="INTERVAL_CHRIS_META_LB"
 merged$TISSUE="WholeBlood"
@@ -40,22 +54,23 @@ merged$Gene.type = "protein_coding"
 merged$MAF <- pmin(merged$EAF, 1-merged$EAF)
 
 merged <- merged %>%
-  dplyr::select(DATASET, TISSUE, SNPID, CHR, POS, V2, BETA, SE, MLOG10P, EA, NEA, MAF,
-                EAF, N, Fstats, Entrez_Gene_Name, Ensembl_Gene_ID, TSS, phenotype_id, UniProt_ID,
-                Target_Name, Target_Full_Name, FILENAME, Gene.type)
+  dplyr::select(DATASET, TISSUE, collapsed_SNPID, collapsed_CHR, collapsed_start, collapsed_end, collapsed_POS, collapsed_V2, collapsed_BETA, collapsed_SE, collapsed_MLOG10P, collapsed_EA, collapsed_NEA,
+  MAF, collapsed_EAF, collapsed_N, collapsed_Fstats, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+  collapsed_TSS, collapsed_phenotype_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
+  FILENAME, collapsed_Gene.type)
 
-names(merged)[names(merged) == "POS"] <- "POS_37"
-names(merged)[names(merged) == "V2"] <- "POS_38"
-names(merged)[names(merged) == "MLOG10P"] <- "MinusLog10PVAL"
-names(merged)[names(merged) == "EA"] <- "EFFECT_ALLELE"
-names(merged)[names(merged) == "NEA"] <- "OTHER_ALLELE"
-names(merged)[names(merged) == "N"] <- "SAMPLESIZE"
-names(merged)[names(merged) == "Entrez_Gene_Name"] <- "GENE_NAME"
-names(merged)[names(merged) == "Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
-names(merged)[names(merged) == "TSS"] <- "TSS_37"
-names(merged)[names(merged) == "phenotype_id"] <- "SeqID"
-names(merged)[names(merged) == "UniProt_ID"] <- "UNIPROT"
-names(merged)[names(merged) == "Target_Name"] <- "PROTEIN_NAME"
-names(merged)[names(merged) == "Target_Full_Name"] <- "PROTEIN_LONG_NAME"
+names(merged)[names(merged) == "collapsed_POS"] <- "POS_37"
+names(merged)[names(merged) == "collapsed_V2"] <- "POS_38"
+names(merged)[names(merged) == "collapsed_MLOG10P"] <- "MinusLog10PVAL"
+names(merged)[names(merged) == "collapsed_EA"] <- "EFFECT_ALLELE"
+names(merged)[names(merged) == "collapsed_NEA"] <- "OTHER_ALLELE"
+names(merged)[names(merged) == "collapsed_N"] <- "SAMPLESIZE"
+names(merged)[names(merged) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
+names(merged)[names(merged) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
+names(merged)[names(merged) == "collapsed_TSS"] <- "TSS_37"
+names(merged)[names(merged) == "collapsed_phenotype_id"] <- "SeqID"
+names(merged)[names(merged) == "collapsed_UniProt_ID"] <- "UNIPROT"
+names(merged)[names(merged) == "collapsed_Target_Name"] <- "PROTEIN_NAME"
+names(merged)[names(merged) == "collapsed_Target_Full_Name"] <- "PROTEIN_LONG_NAME"
 
 fwrite(merged, lb_liftover_path)
