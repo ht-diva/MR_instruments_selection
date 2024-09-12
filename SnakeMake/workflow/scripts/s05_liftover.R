@@ -17,12 +17,12 @@ liftover <- fread(opt$input_liftover)
 mapping <- fread(opt$mapping)
 lb_liftover_path <- opt$liftover_lb_output
 
+lb$locus_START_END_37 <- paste0(lb$start,"-",lb$end)
 lb <- lb[order(lb$CHR, lb$POS), ]
+
 liftover <- liftover[,c(1:3)]
+lb <- cbind(liftover, lb)
 
-data <- cbind(liftover, lb)
-
-mapping <- subset(mapping, !duplicated(mapping[, c("ID")]))
 mapping$SeqId <- gsub("-", ".", mapping$SeqId)
 mapping$SeqId <- paste0("seq.", mapping$SeqId )
 mapping$cis_start <- mapping$TSS - 500000
@@ -42,35 +42,48 @@ collapsed_df <- merged_within_cis %>%
   group_by(phenotype_id, SNPID) %>%
   # Step 3: Collapse all columns by concatenating values where necessary
   summarise(
-    across(everything(), ~ paste(unique(.), collapse = "|"), .names = "collapsed_{col}")
-  ) %>%
-  # Step 4: Ungroup to return the result to a normal dataframe
-  ungroup()
+    across(everything(), ~ paste(unique(.), collapse = "|"), .names = "collapsed_{col}"),
+    .groups = "drop")
 
-merged$DATASET="INTERVAL_CHRIS_META_LB"
-merged$TISSUE="WholeBlood"
-merged$FILENAME=NA
-merged$Gene.type = "protein_coding"
-merged$MAF <- pmin(merged$EAF, 1-merged$EAF)
+collapsed_df$DATASET="INTERVAL_CHRIS_META_LB"
+collapsed_df$TISSUE="WholeBlood"
+collapsed_df$FILENAME=NA
+collapsed_df$Gene.type = "protein_coding"
+collapsed_df$collapsed_EAF <- as.numeric(collapsed_df$collapsed_EAF)
+collapsed_df$collapsed_BETA <- as.numeric(collapsed_df$collapsed_BETA)
+collapsed_df$collapsed_SE <- as.numeric(collapsed_df$collapsed_SE)
+collapsed_df$collapsed_N <- as.numeric(collapsed_df$collapsed_N)
 
-merged <- merged %>%
-  dplyr::select(DATASET, TISSUE, collapsed_SNPID, collapsed_CHR, collapsed_start, collapsed_end, collapsed_POS, collapsed_V2, collapsed_BETA, collapsed_SE, collapsed_MLOG10P, collapsed_EA, collapsed_NEA,
-  MAF, collapsed_EAF, collapsed_N, collapsed_Fstats, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
-  collapsed_TSS, collapsed_phenotype_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
-  FILENAME, collapsed_Gene.type)
+collapsed_df$MAF <- pmin(collapsed_df$collapsed_EAF, 1-collapsed_df$collapsed_EAF)
+collapsed_df$PVE <-  (2*(collapsed_df$collapsed_BETA^2)*collapsed_df$MAF*(1-collapsed_df$MAF))/
+  (2*(collapsed_df$collapsed_BETA^2)*collapsed_df$MAF*(1-collapsed_df$MAF)+(collapsed_df$collapsed_SE^2)*2*collapsed_df$collapsed_N*collapsed_df$MAF*(1-collapsed_df$MAF))
 
-names(merged)[names(merged) == "collapsed_POS"] <- "POS_37"
-names(merged)[names(merged) == "collapsed_V2"] <- "POS_38"
-names(merged)[names(merged) == "collapsed_MLOG10P"] <- "MinusLog10PVAL"
-names(merged)[names(merged) == "collapsed_EA"] <- "EFFECT_ALLELE"
-names(merged)[names(merged) == "collapsed_NEA"] <- "OTHER_ALLELE"
-names(merged)[names(merged) == "collapsed_N"] <- "SAMPLESIZE"
-names(merged)[names(merged) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
-names(merged)[names(merged) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
-names(merged)[names(merged) == "collapsed_TSS"] <- "TSS_37"
-names(merged)[names(merged) == "collapsed_phenotype_id"] <- "SeqID"
-names(merged)[names(merged) == "collapsed_UniProt_ID"] <- "UNIPROT"
-names(merged)[names(merged) == "collapsed_Target_Name"] <- "PROTEIN_NAME"
-names(merged)[names(merged) == "collapsed_Target_Full_Name"] <- "PROTEIN_LONG_NAME"
+collapsed_df <- collapsed_df %>%
+  dplyr::select(DATASET, TISSUE, SNPID, collapsed_CHR, collapsed_POS, collapsed_V2, collapsed_locus_START_END_37,
+                collapsed_BETA, collapsed_SE, collapsed_MLOG10P, collapsed_EA, collapsed_NEA,
+                MAF, collapsed_EAF, collapsed_N, PVE, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_TSS, phenotype_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
+                FILENAME, Gene.type)
 
-fwrite(merged, lb_liftover_path)
+
+names(collapsed_df)[names(collapsed_df) == "collapsed_CHR"] <- "CHR"
+names(collapsed_df)[names(collapsed_df) == "collapsed_POS"] <- "POS_37"
+names(collapsed_df)[names(collapsed_df) == "collapsed_V2"] <- "POS_38"
+names(collapsed_df)[names(collapsed_df) == "collapsed_locus_START_END_37"] <- "locus_START_END_37"
+names(collapsed_df)[names(collapsed_df) == "collapsed_BETA"] <- "BETA"
+names(collapsed_df)[names(collapsed_df) == "collapsed_SE"] <- "SE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_MLOG10P"] <- "MinusLog10PVAL"
+names(collapsed_df)[names(collapsed_df) == "collapsed_EA"] <- "EFFECT_ALLELE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_NEA"] <- "OTHER_ALLELE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_EAF"] <- "EAF"
+names(collapsed_df)[names(collapsed_df) == "collapsed_N"] <- "SAMPLESIZE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
+names(collapsed_df)[names(collapsed_df) == "collapsed_TSS"] <- "TSS_37"
+names(collapsed_df)[names(collapsed_df) == "collapsed_phenotype_id"] <- "SeqID"
+names(collapsed_df)[names(collapsed_df) == "collapsed_UniProt_ID"] <- "UNIPROT"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Target_Name"] <- "PROTEIN_NAME"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Target_Full_Name"] <- "PROTEIN_LONG_NAME"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Gene.type"] <- "Gene.type"
+
+fwrite(collapsed_df, lb_liftover_path)
