@@ -192,7 +192,7 @@ rule select_ivs_from_cojo:
         """
         Rscript workflow/scripts/s02_instruments_from_conditional_analysis.R \
             --input {input.cojo} \
-            --liftover {input.liftover} \
+            --input_liftover {input.liftover} \
             --mapping {input.mapping} \
             --conditional_output {output.conditional} \
             --unconditional_output {output.unconditional}

@@ -8,14 +8,14 @@ source("workflow/scripts/s00_mapping_functions.R")
 option_list <- list(
   make_option("--input", default=NULL, help="Path and file name of Cojo"),
   make_option("--mapping", default=NULL, help="Mapping file path for cis and trans"),
-  make_option("--liftover", default=NULL, help="liftover file path"),
+  make_option("--input_liftover", default=NULL, help="liftover file path"),
   make_option("--conditional_output", default=NULL, help="Output path and name for list of instruments from Cojo"),
   make_option("--unconditional_output", default=NULL, help="Output path and name for list of instruments from Cojo unconditional"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
 cojo<-fread(opt$input)
 mapping<-fread(opt$mapping)
-liftover<-fread(opt$liftover)
+liftover<-fread(opt$input_liftover)
 conditional_path<-opt$conditional_output
 unconditional_path<-opt$unconditional_output
 
