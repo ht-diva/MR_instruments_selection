@@ -97,7 +97,6 @@ names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapse
 
 cojo_unconditional<-collapsed_df_unconditional
 
-
 merged_conditional <- cojo_cis_conditional %>%
   left_join(mapping, by = c("study_id" = "target"), relationship = "many-to-many") %>%
   filter(Chr == chromosome, (bp >= cis_start & bp <= cis_end))
