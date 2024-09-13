@@ -40,11 +40,24 @@ for (i in 1:nrow(cojo)){
 }
 
 cojo_cis<-cojo[which(cojo$cis_or_trans=="cis"),]
-##select unconditional beta se
-cojo_cis$Fstats_conditional<-((cojo_cis$bC^2)/(cojo_cis$bC_se^2))
-cojo_cis_conditional<-cojo_cis[which(cojo_cis$Fstats_conditional>=10), ]
-cojo_cis$Fstats<-((cojo_cis$b^2)/(cojo_cis$se^2))
+cojo_cis$N <- 13445
+cojo_cis$MAF <- pmin(cojo_cis$freq_geno, 1-cojo_cis$freq_geno)
+cojo_cis <- cojo_cis %>%
+  group_by(locus_START_END_37) %>%
+  mutate(k = n())
+
+cojo_cis$PVE <- (2*(cojo_cis$b^2)*cojo_cis$MAF*(1-cojo_cis$MAF))/
+  (2*(cojo_cis$b^2)*cojo_cis$MAF*(1-cojo_cis$MAF)+(cojo_cis$se^2)*2*cojo_cis$N*cojo_cis$MAF*(1-cojo_cis$MAF))
+cojo_cis$Fstats <- (cojo_cis$PVE*(cojo_cis$N-2))/(1-cojo_cis$PVE)
+cojo_cis$Fstats_multipleMR <- (cojo_cis$PVE*(cojo_cis$N-1-cojo_cis$k))/((1-cojo_cis$PVE)*cojo_cis$k)
+
+cojo_cis$PVE_C <- (2*(cojo_cis$bC^2)*cojo_cis$MAF*(1-cojo_cis$MAF))/
+  (2*(cojo_cis$bC^2)*cojo_cis$MAF*(1-cojo_cis$MAF)+(cojo_cis$bC_se^2)*2*cojo_cis$N*cojo_cis$MAF*(1-cojo_cis$MAF))
+cojo_cis$Fstats_C <- (cojo_cis$PVE_C*(cojo_cis$N-2))/(1-cojo_cis$PVE_C)
+cojo_cis$Fstats_C_multipleMR <- (cojo_cis$PVE_C*(cojo_cis$N-1-cojo_cis$k))/((1-cojo_cis$PVE_C)*cojo_cis$k)
+
 cojo_cis_unconditional <- cojo_cis[which(cojo_cis$Fstats>=10), ]
+cojo_cis_conditional<-cojo_cis[which(cojo_cis$Fstats_C>=10), ]
 
 merged_unconditional <- cojo_cis_unconditional %>%
   left_join(mapping, by = c("study_id" = "target"), relationship = "many-to-many") %>%
@@ -62,19 +75,13 @@ collapsed_df_unconditional$DATASET="INTERVAL_CHRIS_META_COJO"
 collapsed_df_unconditional$TISSUE="WholeBlood"
 collapsed_df_unconditional$FILENAME=NA
 collapsed_df_unconditional$Gene.type = "protein_coding"
-collapsed_df_unconditional$N <- 13445
-collapsed_df_unconditional$collapsed_freq_geno <- as.numeric(collapsed_df_unconditional$collapsed_freq_geno)
-collapsed_df_unconditional$collapsed_b <- as.numeric(collapsed_df_unconditional$collapsed_b)
-collapsed_df_unconditional$collapsed_se <- as.numeric(collapsed_df_unconditional$collapsed_se)
-
-collapsed_df_unconditional$MAF <- pmin(collapsed_df_unconditional$collapsed_freq_geno, 1-collapsed_df_unconditional$collapsed_freq_geno)
-collapsed_df_unconditional$PVE <- (2*(collapsed_df_unconditional$collapsed_b^2)*collapsed_df_unconditional$MAF*(1-collapsed_df_unconditional$MAF))/
-  (2*(collapsed_df_unconditional$collapsed_b^2)*collapsed_df_unconditional$MAF*(1-collapsed_df_unconditional$MAF)+(collapsed_df_unconditional$collapsed_se^2)*2*collapsed_df_unconditional$N*collapsed_df_unconditional$MAF*(1-collapsed_df_unconditional$MAF))
 
 collapsed_df_unconditional <- collapsed_df_unconditional %>%
   dplyr::select(DATASET, TISSUE, SNP, collapsed_Chr, collapsed_bp, collapsed_V2, collapsed_locus_START_END_37,
-                collapsed_b, collapsed_se, collapsed_mlog10p, collapsed_EA, collapsed_NEA, MAF,
-                collapsed_freq_geno, N, PVE,collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_b, collapsed_se, collapsed_mlog10p, collapsed_EA, collapsed_NEA, collapsed_MAF,
+                collapsed_freq_geno, collapsed_N, collapsed_PVE, collapsed_k, collapsed_Fstats,
+                collapsed_Fstats_multipleMR,
+                collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
                 collapsed_TSS, study_id, collapsed_UniProt_ID,
                 collapsed_Target_Name, collapsed_Target_Full_Name, FILENAME, Gene.type)
 
@@ -88,8 +95,13 @@ names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapse
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_mlog10p"] <- "MinusLog10PVAL"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_EA"] <- "EFFECT_ALLELE"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_NEA"] <- "OTHER_ALLELE"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_MAF"] <- "MAF"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_freq_geno"] <- "EAF"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_N"] <- "SAMPLESIZE"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_PVE"] <- "PVE"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_k"] <- "k"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Fstats"] <- "Fstats"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Fstats_multipleMR"] <- "Fstats_multipleMR"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_TSS"] <- "TSS_37"
@@ -117,19 +129,14 @@ collapsed_df_conditional$DATASET="INTERVAL_CHRIS_META_COJO"
 collapsed_df_conditional$TISSUE="WholeBlood"
 collapsed_df_conditional$FILENAME=NA
 collapsed_df_conditional$Gene.type = "protein_coding"
-collapsed_df_conditional$N <- 13445
-collapsed_df_conditional$collapsed_freq_geno <- as.numeric(collapsed_df_conditional$collapsed_freq_geno)
-collapsed_df_conditional$collapsed_bC <- as.numeric(collapsed_df_conditional$collapsed_bC)
-collapsed_df_conditional$collapsed_bC_se <- as.numeric(collapsed_df_conditional$collapsed_bC_se)
-
-collapsed_df_conditional$MAF <- pmin(collapsed_df_conditional$collapsed_freq_geno, 1-collapsed_df_conditional$collapsed_freq_geno)
-collapsed_df_conditional$PVE <- (2*(collapsed_df_conditional$collapsed_bC_se^2)*collapsed_df_conditional$MAF*(1-collapsed_df_conditional$MAF))/
-  (2*(collapsed_df_conditional$collapsed_bC^2)*collapsed_df_conditional$MAF*(1-collapsed_df_conditional$MAF)+(collapsed_df_conditional$collapsed_bC_se^2)*2*collapsed_df_conditional$N*collapsed_df_conditional$MAF*(1-collapsed_df_conditional$MAF))
+colnames(collapsed_df_conditional)
 
 collapsed_df_conditional <- collapsed_df_conditional %>%
   dplyr::select(DATASET, TISSUE, SNP, collapsed_Chr, collapsed_bp, collapsed_V2, collapsed_locus_START_END_37,
-                collapsed_bC, collapsed_bC_se, collapsed_mlog10pC, collapsed_EA, collapsed_NEA, MAF,
-                collapsed_freq_geno, N, PVE,collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_bC, collapsed_bC_se, collapsed_mlog10pC, collapsed_EA, collapsed_NEA, collapsed_MAF,
+                collapsed_freq_geno, collapsed_N, collapsed_PVE_C, collapsed_k, collapsed_Fstats_C,
+                collapsed_Fstats_C_multipleMR,
+                collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
                 collapsed_TSS, study_id, collapsed_UniProt_ID,
                 collapsed_Target_Name, collapsed_Target_Full_Name, FILENAME, Gene.type)
 
@@ -143,8 +150,13 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_bC
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_mlog10pC"] <- "MinusLog10PVAL"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_EA"] <- "EFFECT_ALLELE"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_NEA"] <- "OTHER_ALLELE"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_MAF"] <- "MAF"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_freq_geno"] <- "EAF"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_N"] <- "SAMPLESIZE"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_PVE_C"] <- "PVE"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_k"] <- "k"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Fstats_C"] <- "Fstats"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Fstats_C_multipleMR"] <- "Fstats_multipleMR"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_TSS"] <- "TSS_37"
@@ -154,7 +166,7 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Ta
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Target_Full_Name"] <- "PROTEIN_LONG_NAME"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Gene.type"] <- "Gene.type"
 
-cojo_conditional<-collapsed_df_conditional
+cojo_unconditional<-collapsed_df_unconditional
 
 fwrite(cojo_conditional, conditional_path)
 fwrite(cojo_unconditional,unconditional_path)

@@ -62,15 +62,17 @@ fwrite(annot,annot_path)
 
 ##filtering only cis
 LB<-LB[LB$cis_or_trans=="cis",]
+LB$MAF<-pmin(LB$EAF, 1-LB$EAF)
+LB$PVE <- (2*(LB$BETA^2)*LB$MAF*(1-LB$MAF))/
+  (2*(LB$BETA^2)*LB$MAF*(1-LB$MAF)+(LB$SE^2)*2*LB$N*LB$MAF*(1-LB$MAF))
+LB$Fstats <- (LB$PVE*(LB$N-2))/(1-LB$PVE)
 
-##Fstats computation
-LB$Fstats<-((LB$BETA^2)/(LB$SE^2))
 ##filtering snp passing fstats threshold
 LB$instrum<-LB$Fstats>=10 ##to check with Giulia >10 or >=10
 # table(LB$instrum)
 
 ##selecting only columns of interests
-LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF","BETA","SE","N", "MLOG10P","Fstats","instrum","phenotype_id","cis_or_trans")]
+LB<-LB[,c("start","end","chr","POS","SNPID","EA","NEA","EAF", "MAF", "PVE", "Fstats", "BETA","SE","N", "MLOG10P","Fstats","instrum","phenotype_id","cis_or_trans")]
 ##here all the rows with instrum =T are instruments
 ##TO CHECK WITH MVP: if 2 rows with identical seqID, what should we do? keep both? choose the one with strongest pval?
 ############################################
@@ -102,7 +104,7 @@ if (FALSE%in%LB$instrum){
 
 
 ##selecting only columns of interests
-LB<-LB[,c("chr","start","end","POS","SNPID","EA","NEA","EAF","BETA","SE", "N", "MLOG10P","phenotype_id","cis_or_trans","Fstats","instrum")]
+LB<-LB[,c("chr","start","end","POS","SNPID","EA","NEA","EAF","MAF", "PVE", "Fstats", "BETA","SE", "N", "MLOG10P","phenotype_id","cis_or_trans","instrum")]
 ##homogenization with meta-analysis colnames
 colnames(LB)[1]<-"CHR"
 ##save
