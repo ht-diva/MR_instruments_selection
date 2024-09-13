@@ -12,8 +12,10 @@ option_list <- list(
   make_option("--liftover_lb_output", default=NULL, help="Output path from MR IVs LB"))
 opt_parser = OptionParser(option_list=option_list);
 opt = parse_args(opt_parser);
+
 lb <- fread(opt$input)
-liftover <- fread(opt$input_liftover)
+liftover <- read.table(opt$input_liftover, header = FALSE, comment.char = "#", sep = "\t", stringsAsFactors = FALSE)
+
 mapping <- fread(opt$mapping)
 lb_liftover_path <- opt$liftover_lb_output
 
@@ -27,7 +29,6 @@ mapping$SeqId <- gsub("-", ".", mapping$SeqId)
 mapping$SeqId <- paste0("seq.", mapping$SeqId )
 mapping$cis_start <- mapping$TSS - 500000
 mapping$cis_end <- mapping$TSS + 500000
-
 
 merged_within_cis <- lb %>%
   left_join(mapping, by = c("phenotype_id" = "SeqId"), relationship = "many-to-many") %>%
