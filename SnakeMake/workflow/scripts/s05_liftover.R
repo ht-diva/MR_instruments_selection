@@ -50,22 +50,14 @@ collapsed_df$DATASET="INTERVAL_CHRIS_META_LB"
 collapsed_df$TISSUE="WholeBlood"
 collapsed_df$FILENAME=NA
 collapsed_df$Gene.type = "protein_coding"
-collapsed_df$collapsed_EAF <- as.numeric(collapsed_df$collapsed_EAF)
-collapsed_df$collapsed_BETA <- as.numeric(collapsed_df$collapsed_BETA)
-collapsed_df$collapsed_SE <- as.numeric(collapsed_df$collapsed_SE)
-collapsed_df$collapsed_N <- as.numeric(collapsed_df$collapsed_N)
 
-collapsed_df$MAF <- pmin(collapsed_df$collapsed_EAF, 1-collapsed_df$collapsed_EAF)
-collapsed_df$PVE <-  (2*(collapsed_df$collapsed_BETA^2)*collapsed_df$MAF*(1-collapsed_df$MAF))/
-  (2*(collapsed_df$collapsed_BETA^2)*collapsed_df$MAF*(1-collapsed_df$MAF)+(collapsed_df$collapsed_SE^2)*2*collapsed_df$collapsed_N*collapsed_df$MAF*(1-collapsed_df$MAF))
 
 collapsed_df <- collapsed_df %>%
   dplyr::select(DATASET, TISSUE, SNPID, collapsed_CHR, collapsed_POS, collapsed_V2, collapsed_locus_START_END_37,
                 collapsed_BETA, collapsed_SE, collapsed_MLOG10P, collapsed_EA, collapsed_NEA,
-                MAF, collapsed_EAF, collapsed_N, PVE, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                MAF, collapsed_EAF, collapsed_N, collapsed_PVE, collapsed_Fstats, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
                 collapsed_TSS, phenotype_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
                 FILENAME, Gene.type)
-
 
 names(collapsed_df)[names(collapsed_df) == "collapsed_CHR"] <- "CHR"
 names(collapsed_df)[names(collapsed_df) == "collapsed_POS"] <- "POS_37"
@@ -78,6 +70,8 @@ names(collapsed_df)[names(collapsed_df) == "collapsed_EA"] <- "EFFECT_ALLELE"
 names(collapsed_df)[names(collapsed_df) == "collapsed_NEA"] <- "OTHER_ALLELE"
 names(collapsed_df)[names(collapsed_df) == "collapsed_EAF"] <- "EAF"
 names(collapsed_df)[names(collapsed_df) == "collapsed_N"] <- "SAMPLESIZE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_PVE"] <- "PVE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_Fstats"] <- "Fstats"
 names(collapsed_df)[names(collapsed_df) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
 names(collapsed_df)[names(collapsed_df) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
 names(collapsed_df)[names(collapsed_df) == "collapsed_TSS"] <- "TSS_37"
