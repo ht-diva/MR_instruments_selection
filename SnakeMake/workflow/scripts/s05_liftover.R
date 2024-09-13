@@ -55,7 +55,7 @@ collapsed_df$Gene.type = "protein_coding"
 collapsed_df <- collapsed_df %>%
   dplyr::select(DATASET, TISSUE, SNPID, collapsed_CHR, collapsed_POS, collapsed_V2, collapsed_locus_START_END_37,
                 collapsed_BETA, collapsed_SE, collapsed_MLOG10P, collapsed_EA, collapsed_NEA,
-                MAF, collapsed_EAF, collapsed_N, collapsed_PVE, collapsed_Fstats, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_MAF, collapsed_EAF, collapsed_N, collapsed_PVE, collapsed_Fstats, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
                 collapsed_TSS, phenotype_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
                 FILENAME, Gene.type)
 
@@ -68,6 +68,7 @@ names(collapsed_df)[names(collapsed_df) == "collapsed_SE"] <- "SE"
 names(collapsed_df)[names(collapsed_df) == "collapsed_MLOG10P"] <- "MinusLog10PVAL"
 names(collapsed_df)[names(collapsed_df) == "collapsed_EA"] <- "EFFECT_ALLELE"
 names(collapsed_df)[names(collapsed_df) == "collapsed_NEA"] <- "OTHER_ALLELE"
+names(collapsed_df)[names(collapsed_df) == "collapsed_MAF"] <- "MAF"
 names(collapsed_df)[names(collapsed_df) == "collapsed_EAF"] <- "EAF"
 names(collapsed_df)[names(collapsed_df) == "collapsed_N"] <- "SAMPLESIZE"
 names(collapsed_df)[names(collapsed_df) == "collapsed_PVE"] <- "PVE"
