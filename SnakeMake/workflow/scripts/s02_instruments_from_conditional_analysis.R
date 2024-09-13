@@ -166,7 +166,7 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Ta
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Target_Full_Name"] <- "PROTEIN_LONG_NAME"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Gene.type"] <- "Gene.type"
 
-cojo_unconditional<-collapsed_df_unconditional
+cojo_conditional<-collapsed_df_conditional
 
 fwrite(cojo_conditional, conditional_path)
 fwrite(cojo_unconditional,unconditional_path)
