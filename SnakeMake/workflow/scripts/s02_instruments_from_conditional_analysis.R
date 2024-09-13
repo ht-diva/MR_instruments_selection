@@ -25,6 +25,9 @@ split_variants <- strsplit(cojo$SNP, ":")
 cojo$EA <- sapply(split_variants, function(x) x[3])
 cojo$NEA <- sapply(split_variants, function(x) x[4])
 
+cojo$locus_START_END_37 <- gsub("^chr[0-9XY]+_", "", cojo$locus)  # Remove "chr" part and chromosome number
+cojo$locus_START_END_37 <- gsub("_", "-", cojo$locus_START_END_37)
+
 liftover <- liftover[,c(1:3)]
 cojo <- cbind(liftover, cojo)
 
