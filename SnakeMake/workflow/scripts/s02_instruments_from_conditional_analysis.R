@@ -28,6 +28,14 @@ cojo$NEA <- sapply(split_variants, function(x) x[4])
 cojo$locus_START_END_37 <- gsub("^chr[0-9XY]+_", "", cojo$locus)  # Remove "chr" part and chromosome number
 cojo$locus_START_END_37 <- gsub("_", "-", cojo$locus_START_END_37)
 
+locus_split <- strsplit(cojo$locus_START_END_37, "-")
+cojo$locus_split_start <- sapply(locus_split, function(x) x[1])
+cojo$locus_split_end <- sapply(locus_split, function(x) x[2])
+cojo$locus_start_extended <- as.numeric(as.character(cojo$locus_split_start))-100000
+cojo$locus_start_extended <- ifelse(cojo$locus_start_extende < 0, 0, cojo$locus_start_extende)
+cojo$locus_end_extended <- as.numeric(as.character(cojo$locus_split_end))+100000
+cojo$locus_extended_START_END_37 <- paste0(cojo$locus_start_extended, "-", cojo$locus_end_extended)
+
 liftover <- liftover[,c(1:3)]
 cojo <- cbind(liftover, cojo)
 
@@ -78,18 +86,18 @@ collapsed_df_unconditional$Gene.type = "protein_coding"
 
 collapsed_df_unconditional <- collapsed_df_unconditional %>%
   dplyr::select(DATASET, TISSUE, SNP, collapsed_Chr, collapsed_bp, collapsed_V2, collapsed_locus_START_END_37,
-                collapsed_b, collapsed_se, collapsed_mlog10p, collapsed_EA, collapsed_NEA, collapsed_MAF,
-                collapsed_freq_geno, collapsed_N, collapsed_PVE, collapsed_k, collapsed_Fstats,
-                collapsed_Fstats_multipleMR,
-                collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
-                collapsed_TSS, study_id, collapsed_UniProt_ID,
-                collapsed_Target_Name, collapsed_Target_Full_Name, FILENAME, Gene.type)
+                collapsed_locus_extended_START_END_37, collapsed_b, collapsed_se, collapsed_mlog10p, collapsed_EA,
+                collapsed_NEA, collapsed_MAF, collapsed_freq_geno, collapsed_N, collapsed_PVE, collapsed_k,
+                collapsed_Fstats, collapsed_Fstats_multipleMR, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_TSS, study_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
+                FILENAME, Gene.type)
 
 
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Chr"] <- "CHR"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_bp"] <- "POS_37"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_V2"] <- "POS_38"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_locus_START_END_37"] <- "locus_START_END_37"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_locus_extended_START_END_37"] <- "locus_extended_START_END_37"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_b"] <- "BETA"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_se"] <- "SE"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_mlog10p"] <- "MinusLog10PVAL"
@@ -133,7 +141,7 @@ colnames(collapsed_df_conditional)
 
 collapsed_df_conditional <- collapsed_df_conditional %>%
   dplyr::select(DATASET, TISSUE, SNP, collapsed_Chr, collapsed_bp, collapsed_V2, collapsed_locus_START_END_37,
-                collapsed_bC, collapsed_bC_se, collapsed_mlog10pC, collapsed_EA, collapsed_NEA, collapsed_MAF,
+                collapsed_locus_extended_START_END_37, collapsed_bC, collapsed_bC_se, collapsed_mlog10pC, collapsed_EA, collapsed_NEA, collapsed_MAF,
                 collapsed_freq_geno, collapsed_N, collapsed_PVE_C, collapsed_k, collapsed_Fstats_C,
                 collapsed_Fstats_C_multipleMR,
                 collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
@@ -145,6 +153,7 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Ch
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_bp"] <- "POS_37"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_V2"] <- "POS_38"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_locus_START_END_37"] <- "locus_START_END_37"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_locus_extended_START_END_37"] <- "locus_extended_START_END_37"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_bC"] <- "BETA"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_bC_se"] <- "SE"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_mlog10pC"] <- "MinusLog10PVAL"
