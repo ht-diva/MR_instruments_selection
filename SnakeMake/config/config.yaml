@@ -6,7 +6,7 @@ workspace_path: 'results'
 
 dest_path: 'destination'
 sum_stat_path: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped/output'
-cojo_results: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped_filtered/30-Aug-24_collected_credible_sets_extended.csv'
+cojo_results: '/scratch/gianmauro.cuccuru/finemap_pipeline/pqtl_pipeline_finemap/results/meta_std/cojo/collected_credible_sets.csv'
 mapping_filepath: 'data/mapped_gene_file_GRCh37_21052025.txt'
 locus_breaker_filepath: '/exchange/healthds/pQTL/results/META_CHRIS_INTERVAL/qced_sumstats_digits_not_flipped_filtered/collected_loci_excluding_mhc.csv'
 chain_file: '/group/diangelantonio/public_data/liftOver/hg19ToHg38.over.chain.gz'
