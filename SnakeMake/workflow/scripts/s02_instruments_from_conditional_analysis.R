@@ -79,7 +79,7 @@ collapsed_df_unconditional <- merged_unconditional %>%
     .groups = "drop")
 
 
-collapsed_df_unconditional$DATASET="INTERVAL_CHRIS_META_COJO"
+collapsed_df_unconditional$DATASET="INTERVAL_CHRIS_META_COJO_unconditional"
 collapsed_df_unconditional$TISSUE="WholeBlood"
 collapsed_df_unconditional$FILENAME=NA
 collapsed_df_unconditional$Gene.type = "protein_coding"
@@ -133,7 +133,7 @@ collapsed_df_conditional <- merged_conditional %>%
     .groups = "drop")
 
 
-collapsed_df_conditional$DATASET="INTERVAL_CHRIS_META_COJO"
+collapsed_df_conditional$DATASET="INTERVAL_CHRIS_META_COJO_conditional"
 collapsed_df_conditional$TISSUE="WholeBlood"
 collapsed_df_conditional$FILENAME=NA
 collapsed_df_conditional$Gene.type = "protein_coding"
