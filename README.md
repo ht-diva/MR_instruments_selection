@@ -1,4 +1,4 @@
-README MR-instruments CHRIS-INTERVAL METANALYSIS.
+MR-instruments CHRIS-INTERVAL METANALYSIS.
 
 20240917 Giulia Pontali, Solène Cadiou, Claudia Giambartolomei @HUMANTECHNOPOLE
 
