@@ -88,7 +88,7 @@ collapsed_df_unconditional <- collapsed_df_unconditional %>%
   dplyr::select(DATASET, TISSUE, SNP, collapsed_Chr, collapsed_bp, collapsed_V2, collapsed_locus_START_END_37,
                 collapsed_locus_extended_START_END_37, collapsed_b, collapsed_se, collapsed_mlog10p, collapsed_EA,
                 collapsed_NEA, collapsed_MAF, collapsed_freq_geno, collapsed_N, collapsed_PVE, collapsed_k,
-                collapsed_Fstats, collapsed_Fstats_multipleMR, collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_Fstats, collapsed_Fstats_multipleMR, collapsed_Entrez_Gene_ID,
                 collapsed_TSS, study_id, collapsed_UniProt_ID, collapsed_Target_Name, collapsed_Target_Full_Name,
                 FILENAME, Gene.type)
 
@@ -110,8 +110,7 @@ names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapse
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_k"] <- "k"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Fstats"] <- "Fstats"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Fstats_multipleMR"] <- "Fstats_multipleMR"
-names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
-names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
+names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_Entrez_Gene_ID"] <- "GENE_NAME"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_TSS"] <- "TSS_37"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "study_id"] <- "SeqID"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "collapsed_UniProt_ID"] <- "UNIPROT"
@@ -144,7 +143,7 @@ collapsed_df_conditional <- collapsed_df_conditional %>%
                 collapsed_locus_extended_START_END_37, collapsed_bC, collapsed_bC_se, collapsed_mlog10pC, collapsed_EA, collapsed_NEA, collapsed_MAF,
                 collapsed_freq_geno, collapsed_N, collapsed_PVE_C, collapsed_k, collapsed_Fstats_C,
                 collapsed_Fstats_C_multipleMR,
-                collapsed_Entrez_Gene_Name, collapsed_Ensembl_Gene_ID,
+                collapsed_Entrez_Gene_ID,
                 collapsed_TSS, study_id, collapsed_UniProt_ID,
                 collapsed_Target_Name, collapsed_Target_Full_Name, FILENAME, Gene.type)
 
@@ -166,8 +165,7 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_PV
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_k"] <- "k"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Fstats_C"] <- "Fstats"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Fstats_C_multipleMR"] <- "Fstats_multipleMR"
-names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Entrez_Gene_Name"] <- "GENE_NAME"
-names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Ensembl_Gene_ID"] <- "GENE_ENSEMBL"
+names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_Entrez_Gene_ID"] <- "GENE_NAME"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_TSS"] <- "TSS_37"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "study_id"] <- "SeqID"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "collapsed_UniProt_ID"] <- "UNIPROT"
