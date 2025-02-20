@@ -30,7 +30,9 @@ cojo$locus_START_END_37 <- gsub("_", "-", cojo$locus_START_END_37)
 
 locus_split <- strsplit(cojo$locus_START_END_37, "-")
 cojo$locus_split_start <- sapply(locus_split, function(x) x[1])
+cojo$locus_split_start <- as.numeric(cojo$locus_split_start)
 cojo$locus_split_end <- sapply(locus_split, function(x) x[2])
+cojo$locus_split_end <- as.numeric(cojo$locus_split_end)
 cojo$locus_start_extended <- as.numeric(as.character(cojo$locus_split_start))-100000
 cojo$locus_start_extended <- ifelse(cojo$locus_start_extende < 0, 0, cojo$locus_start_extende)
 cojo$locus_end_extended <- as.numeric(as.character(cojo$locus_split_end))+100000
