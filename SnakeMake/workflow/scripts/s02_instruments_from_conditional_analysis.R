@@ -52,9 +52,9 @@ for (i in 1:nrow(cojo)){
 cojo_cis<-cojo[which(cojo$cis_or_trans=="cis"),]
 cojo_cis$N <- 13445
 cojo_cis$MAF <- pmin(cojo_cis$freq_geno, 1-cojo_cis$freq_geno)
-#cojo_cis <- cojo_cis %>%
-#  group_by(locus_START_END_37) %>%
-#  mutate(k = n())
+cojo_cis <- cojo_cis %>%
+  group_by(locus_START_END_37) %>%
+  mutate(k = n())
 
 cojo_cis$PVE <- (2*(cojo_cis$b^2)*cojo_cis$MAF*(1-cojo_cis$MAF))/
   (2*(cojo_cis$b^2)*cojo_cis$MAF*(1-cojo_cis$MAF)+(cojo_cis$se^2)*2*cojo_cis$N*cojo_cis$MAF*(1-cojo_cis$MAF))
