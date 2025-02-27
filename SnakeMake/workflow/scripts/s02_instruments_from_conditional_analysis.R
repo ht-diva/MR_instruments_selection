@@ -72,12 +72,7 @@ cojo_cis_conditional<-cojo_cis[which(cojo_cis$Fstats_C>=10), ]
 collapsed_df_unconditional <- cojo_cis_unconditional %>%
   left_join(mapping %>% distinct(target, chromosome, .keep_all = TRUE), by = c("study_id" = "target"), relationship = "many-to-many") %>%
   filter(Chr == chromosome,
-         (
-           (locus_split_start <= cis_start & locus_split_end >= cis_end) |  # locus contains cis
-             (locus_split_start >= cis_start & locus_split_end <= cis_end) |  # locus inside cis
-             (locus_split_start <= cis_start & locus_split_end >= cis_start) |  # locus overlaps start of cis
-             (locus_split_start <= cis_end & locus_split_end >= cis_end)        # locus overlaps end of cis
-         )
+  locus_split_start <= cis_end & locus_split_end >= cis_start
   )
 
 collapsed_df_unconditional$DATASET="INTERVAL_CHRIS_META_COJO_unconditional"
@@ -117,19 +112,13 @@ names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "study_id
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "UniProt_ID"] <- "UNIPROT"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "Target_Name"] <- "PROTEIN_NAME"
 names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "Target_Full_Name"] <- "PROTEIN_LONG_NAME"
-names(collapsed_df_unconditional)[names(collapsed_df_unconditional) == "Gene.type"] <- "Gene.type"
 
 cojo_unconditional<-collapsed_df_unconditional
 
 collapsed_df_conditional <- cojo_cis_conditional %>%
   left_join(mapping %>% distinct(target, chromosome, .keep_all = TRUE), by = c("study_id" = "target"), relationship = "many-to-many") %>%
   filter(Chr == chromosome,
-         (
-           (locus_split_start <= cis_start & locus_split_end >= cis_end) |  # locus contains cis
-             (locus_split_start >= cis_start & locus_split_end <= cis_end) |  # locus inside cis
-             (locus_split_start <= cis_start & locus_split_end >= cis_start) |  # locus overlaps start of cis
-             (locus_split_start <= cis_end & locus_split_end >= cis_end)        # locus overlaps end of cis
-         )
+  locus_split_start <= cis_end & locus_split_end >= cis_start
   )
 
 collapsed_df_conditional$DATASET="INTERVAL_CHRIS_META_COJO_conditional"
@@ -171,7 +160,6 @@ names(collapsed_df_conditional)[names(collapsed_df_conditional) == "study_id"] <
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "UniProt_ID"] <- "UNIPROT"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "Target_Name"] <- "PROTEIN_NAME"
 names(collapsed_df_conditional)[names(collapsed_df_conditional) == "Target_Full_Name"] <- "PROTEIN_LONG_NAME"
-names(collapsed_df_conditional)[names(collapsed_df_conditional) == "Gene.type"] <- "Gene.type"
 
 cojo_conditional<-collapsed_df_conditional
 
